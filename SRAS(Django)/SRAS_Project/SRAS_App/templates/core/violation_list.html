@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SRAS - Violation List</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/static/cozy-dark.css">
+    <script defer src="/static/theme-toggle.js"></script>
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box}
+        body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);min-height:100vh;margin:0;padding:0}
+        .main-container{max-width:1400px;margin:0 auto;background:rgba(255,255,255,0.95);border-radius:15px;box-shadow:0 20px 40px rgba(0,0,0,0.1);overflow:hidden;margin-top:20px}
+        .navbar{background:linear-gradient(135deg,#2c3e50 0%,#34495e 100%);padding:15px 0;position:sticky;top:0;z-index:1000;box-shadow:0 2px 10px rgba(0,0,0,0.1)}
+        .navbar-brand{font-weight:600;font-size:1.5rem;color:#fff!important}
+        .nav-link{color:rgba(255,255,255,0.8)!important;transition:color .3s ease;font-weight:500}
+        .nav-link:hover,.nav-link.active{color:#fff!important}
+        .navbar-toggler{border:none;color:#fff}
+        .navbar-toggler:focus{box-shadow:none}
+        .dropdown-menu{background:#fff;border:none;box-shadow:0 5px 15px rgba(0,0,0,0.1);border-radius:8px}
+        .dropdown-item{color:#2c3e50;transition:all .3s ease}
+        .dropdown-item:hover{background:#f8f9fa;color:#667eea}
+
+        .header{background:linear-gradient(135deg,#2c3e50 0%,#34495e 100%);color:#fff;padding:20px;text-align:center}
+        .header h1{font-size:2.5em;margin-bottom:10px;font-weight:300}
+        .header p{opacity:.9;font-size:1.1em}
+
+        .content{padding:20px}
+        .stats-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:20px;margin-bottom:30px}
+        .stat-card{background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);color:#fff;padding:20px;border-radius:10px;text-align:center;box-shadow:0 5px 15px rgba(0,0,0,0.1)}
+        .stat-card h3{font-size:2em;margin-bottom:5px}
+        .stat-card p{opacity:.9;font-size:.9em}
+
+        .filters{background:#fff;padding:20px;border-radius:10px;margin-bottom:20px;box-shadow:0 5px 15px rgba(0,0,0,0.1)}
+        .filters h3{margin-bottom:15px;color:#2c3e50}
+        .filter-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:15px;margin-bottom:15px}
+        .filter-group{display:flex;flex-direction:column}
+        .filter-group label{margin-bottom:5px;font-weight:bold;color:#2c3e50}
+        .filter-group input,.filter-group select{padding:10px;border:1px solid #ddd;border-radius:5px;font-size:14px}
+        .filter-buttons{display:flex;gap:10px;justify-content:center}
+
+        .btn{padding:10px 20px;border:none;border-radius:5px;cursor:pointer;font-size:14px;text-decoration:none;display:inline-block;transition:all .3s ease}
+        .btn-primary{background:#3498db;color:#fff}.btn-primary:hover{background:#2980b9}
+        .btn-secondary{background:#95a5a6;color:#fff}.btn-secondary:hover{background:#7f8c8d}
+        .btn-danger{background:#e74c3c;color:#fff}.btn-danger:hover{background:#c0392b}
+
+        .bulk-actions{background:#fff;padding:15px;border-radius:10px;margin-bottom:20px;box-shadow:0 5px 15px rgba(0,0,0,0.1);display:flex;justify-content:space-between;align-items:center}
+
+        .violations-table{background:#fff;border-radius:10px;overflow:hidden;box-shadow:0 5px 15px rgba(0,0,0,0.1)}
+        .table-header{background:#2c3e50;color:#fff;padding:15px;display:grid;grid-template-columns:40px 80px 1fr 220px 120px 100px 150px;gap:15px;font-weight:bold}
+        .table-row{display:grid;grid-template-columns:40px 80px 1fr 220px 120px 100px 150px;gap:15px;padding:15px;border-bottom:1px solid #eee;align-items:center}
+        .table-row:hover{background:#f8f9fa}.table-row:last-child{border-bottom:none}
+
+        .violation-image{width:60px;height:40px;object-fit:cover;border-radius:5px;cursor:pointer;transition:transform .3s ease}
+        .violation-image:hover{transform:scale(1.1)}
+
+        .plate-cell{display:flex;flex-direction:column;gap:6px}
+        .plate-text{font-weight:600}
+        .plate-thumb{width:120px;height:auto;border-radius:5px;cursor:pointer;object-fit:contain;box-shadow:0 2px 6px rgba(0,0,0,0.08)}
+        .plate-thumb:hover{transform:scale(1.03);transition:transform .2s ease}
+
+        .pagination{display:flex;justify-content:center;align-items:center;gap:10px;margin-top:20px;padding:20px}
+        .pagination a,.pagination span{padding:8px 12px;border:1px solid #ddd;border-radius:5px;text-decoration:none;color:#333}
+        .pagination .current{background:#3498db;color:#fff;border-color:#3498db}
+
+        .no-violations{text-align:center;padding:40px;color:#6c757d;font-size:1.1em}
+
+        .modal{display:none;position:fixed;z-index:1000;left:0;top:0;width:100%;height:100%;background-color:rgba(0,0,0,0.8)}
+        .modal-content{background:#fff;margin:5% auto;padding:20px;border-radius:10px;width:80%;max-width:800px;max-height:80%;overflow-y:auto}
+        .close{color:#aaa;float:right;font-size:28px;font-weight:bold;cursor:pointer}.close:hover{color:#000}
+        .modal-image{max-width:100%;height:auto;border-radius:5px;cursor:grab;transition:transform .3s ease}
+        .image-controls{display:flex;gap:10px;justify-content:center;margin-bottom:15px;flex-wrap:wrap}
+        .zoom-btn{padding:8px 12px;border:1px solid #ddd;background:#fff;border-radius:5px;cursor:pointer;font-size:12px;transition:all .3s ease}
+        .zoom-btn:hover{background:#f8f9fa;border-color:#007bff}
+        .image-container{overflow:hidden;border-radius:8px;background:#f8f9fa;padding:10px}
+
+        .delete-modal{display:none;position:fixed;z-index:1001;left:0;top:0;width:100%;height:100%;background-color:rgba(0,0,0,0.8)}
+        .delete-modal-content{background:#fff;margin:15% auto;padding:30px;border-radius:10px;width:90%;max-width:500px;text-align:center}
+        .delete-modal h3{color:#e74c3c;margin-bottom:20px}
+        .delete-modal-buttons{display:flex;justify-content:center;gap:15px;margin-top:20px}
+
+        @media (max-width:768px){
+            .main-container{margin:10px;border-radius:10px}
+            .table-header{display:none}
+            .table-row{border:1px solid #ddd;margin-bottom:10px;border-radius:5px;grid-template-columns:1fr;gap:5px}
+            .stats-cards{grid-template-columns:1fr}
+            .filter-row{grid-template-columns:1fr}
+            .bulk-actions{flex-direction:column;gap:10px}
+        }
+    </style>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container">
+        <a class="navbar-brand" href="{% url 'dashboard' %}"><i class="fas fa-shield-alt"></i> SRAS</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"><span class="navbar-toggler-icon"></span></button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item"><a class="nav-link" href="{% url 'dashboard' %}"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'monitor' %}"><i class="fas fa-video"></i> Live Monitor</a></li>
+                <li class="nav-item"><a class="nav-link active" href="{% url 'violation_list' %}"><i class="fas fa-list"></i> Violations</a></li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'enforcer_list' %}"><i class="fas fa-users"></i> Enforcers</a></li>
+            </ul>
+            <ul class="navbar-nav">
+                <li class="nav-item d-flex align-items-center me-2">
+                    <a href="#" class="btn btn-sm btn-outline-primary" data-theme-toggle>🌙 Dark</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                       data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fas fa-user"></i> {{ user.username }}
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                        <li><a class="dropdown-item" href="{% url 'logout' %}"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="main-container">
+    <div class="header">
+        <h1>📊 SRAS Violation Database</h1>
+        <p>View and manage all detected violations</p>
+    </div>
+
+    <div class="content">
+        <div class="nav-links mb-3">
+            <a href="{% url 'monitor' %}" class="btn btn-primary">🔴 Live Monitor</a>
+            <a href="{% url 'violation_list' %}" class="btn btn-success">📋 Violation List</a>
+        </div>
+
+        {% if messages %}
+        <div class="messages">
+            {% for message in messages %}
+            <div class="message {{ message.tags }}">{{ message }}</div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <div class="stats-cards">
+            <div class="stat-card"><h3>{{ total_violations }}</h3><p>Total Violations</p></div>
+            <div class="stat-card"><h3>{{ today_violations }}</h3><p>Today's Violations</p></div>
+            <div class="stat-card"><h3>{{ this_week_violations }}</h3><p>This Week</p></div>
+        </div>
+
+        <div class="filters">
+            <h3>🔍 Search & Filter</h3>
+            <form method="GET" action="{% url 'violation_list' %}">
+                <div class="filter-row">
+                    <div class="filter-group">
+                        <label for="search">Search (Camera)</label>
+                        <input type="text" id="search" name="search" value="{{ search }}" placeholder="Enter plate number or camera name...">
+                    </div>
+                    <div class="filter-group">
+                        <label for="date">Date Filter</label>
+                        <input type="date" id="date" name="date" value="{{ date_filter }}">
+                    </div>
+
+                </div>
+                <div class="filter-buttons">
+                    <button type="submit" class="btn btn-primary">🔍 Search</button>
+                    <a href="{% url 'violation_list' %}" class="btn btn-secondary">🔄 Clear</a>
+                </div>
+            </form>
+        </div>
+
+        {% if page_obj %}
+        <div class="bulk-actions">
+            <div>
+                <input type="checkbox" id="selectAll" class="checkbox-all">
+                <label for="selectAll" class="ms-2">Select All</label>
+                <span id="selectedCount">(0 selected)</span>
+            </div>
+            <div>
+                <button class="btn btn-danger" onclick="deleteSelected()" id="deleteSelectedBtn" disabled>🗑️ Delete Selected</button>
+            </div>
+        </div>
+
+        <form id="bulkDeleteForm" method="POST" action="{% url 'delete_multiple_violations' %}">{% csrf_token %}
+            <div class="violations-table">
+                <div class="table-header">
+                    <div>Select</div>
+                    <div>Image</div>
+                    <div>Details</div>
+                    <div>Plate Number</div>
+                    <div>Camera</div>
+                    <div>Date</div>
+                    <div>Actions</div>
+                </div>
+
+                {% for violation in page_obj %}
+                <div class="table-row">
+                    <div>
+                        <input type="checkbox" name="violation_ids" value="{{ violation.id }}" class="violation-checkbox">
+                    </div>
+
+                    <div>
+                        <img src="{% url 'violation_image' violation.id %}"
+                             alt="Violation Image" class="violation-image"
+                             onclick="showImage('{% url 'violation_image' violation.id %}', '{{ violation.timestamp|date:'M d, Y H:i' }}')">
+                    </div>
+
+                    <div>
+                        <strong>ID: {{ violation.id }}</strong><br>
+                        <small>Hash: {{ violation.rider_hash|default:"N/A"|slice:":8" }}...</small>
+                    </div>
+
+                    <div class="plate-cell">
+                        <div class="plate-text">{{ violation.plate_number|default:"UNKNOWN" }}</div>
+                        {% if violation.plate_image %}
+                            <img src="{% url 'violation_plate_image' violation.id %}"
+                                 alt="Plate Image" class="plate-thumb"
+                                 onclick="showImage('{% url 'violation_plate_image' violation.id %}', 'Plate - {{ violation.timestamp|date:'M d, Y H:i' }}')">
+                        {% endif %}
+                    </div>
+
+                    <div>{{ violation.camera.name }}</div>
+                    <div>{{ violation.timestamp|date:"M d, H:i" }}</div>
+                    <div>
+                        <a href="{% url 'violation_detail' violation.id %}" class="btn btn-primary">👁️ View</a>
+                        <button type="button" class="btn btn-danger" onclick="confirmDelete({{ violation.id }}, '{{ violation.timestamp|date:'M d, Y H:i' }}')">🗑️ Delete</button>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </form>
+
+        {% else %}
+        <div class="no-violations">
+            <h3>📭 No Violations Found</h3>
+            <p>No violations match your search criteria or no violations have been recorded yet.</p>
+        </div>
+        {% endif %}
+
+        {% if page_obj.has_other_pages %}
+        <div class="pagination">
+            {% if page_obj.has_previous %}
+            <a href="?page=1{% if search %}&search={{ search }}{% endif %}{% if date_filter %}&date={{ date_filter }}{% endif %}{% if plate_filter %}&plate={{ plate_filter }}{% endif %}">&laquo; First</a>
+            <a href="?page={{ page_obj.previous_page_number }}{% if search %}&search={{ search }}{% endif %}{% if date_filter %}&date={{ date_filter }}{% endif %}{% if plate_filter %}&plate={{ plate_filter }}{% endif %}">&lsaquo; Previous</a>
+            {% endif %}
+            <span class="current">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+            {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}{% if search %}&search={{ search }}{% endif %}{% if date_filter %}&date={{ date_filter }}{% endif %}{% if plate_filter %}&plate={{ plate_filter }}{% endif %}">Next &rsaquo;</a>
+            <a href="?page={{ page_obj.paginator.num_pages }}{% if search %}&search={{ search }}{% endif %}{% if date_filter %}&date={{ date_filter }}{% endif %}{% if plate_filter %}&plate={{ plate_filter }}{% endif %}">Last &raquo;</a>
+            {% endif %}
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Image Modal -->
+<div id="imageModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <h3 id="modalTitle">Violation Image</h3>
+        <div class="image-controls">
+            <button class="zoom-btn" onclick="zoomIn()">🔍+</button>
+            <button class="zoom-btn" onclick="zoomOut()">🔍-</button>
+            <button class="zoom-btn" onclick="resetZoom()">🔄 Reset</button>
+            <button class="zoom-btn" onclick="togglePan()">✋ Pan</button>
+        </div>
+        <div class="image-container">
+            <img id="modalImage" class="modal-image" src="" alt="Violation Image">
+        </div>
+    </div>
+</div>
+
+<!-- Delete Modal -->
+<div id="deleteModal" class="delete-modal">
+    <div class="delete-modal-content">
+        <h3>🗑️ Confirm Deletion</h3>
+        <p>Are you sure you want to delete violation #<span id="deleteViolationId"></span>?</p>
+        <p><strong>Time:</strong> <span id="deleteViolationTime"></span></p>
+        <p>This action cannot be undone.</p>
+        <div class="delete-modal-buttons">
+            <button class="btn btn-secondary" onclick="closeDeleteModal()">❌ Cancel</button>
+            <button class="btn btn-danger" onclick="deleteViolation()">🗑️ Delete</button>
+        </div>
+    </div>
+</div>
+
+<script>
+let currentDeleteId=null,currentZoom=1,isPanning=false,panStartX=0,panStartY=0,panOffsetX=0,panOffsetY=0;
+
+function showImage(url,title){document.getElementById('modalImage').src=url;document.getElementById('modalTitle').textContent=title;document.getElementById('imageModal').style.display='block';resetZoom()}
+function closeModal(){document.getElementById('imageModal').style.display='none';resetZoom()}
+function zoomIn(){currentZoom=Math.min(currentZoom*1.5,5);updateImageTransform()}
+function zoomOut(){currentZoom=Math.max(currentZoom/1.5,0.5);updateImageTransform()}
+function resetZoom(){currentZoom=1;panOffsetX=0;panOffsetY=0;updateImageTransform()}
+function togglePan(){isPanning=!isPanning;const panBtn=document.querySelector('.zoom-btn:last-child');panBtn.textContent=isPanning?'✋ Pan (ON)':'✋ Pan';panBtn.style.backgroundColor=isPanning?'#007bff':'';panBtn.style.color=isPanning?'#fff':''}
+function updateImageTransform(){const img=document.getElementById('modalImage');img.style.transform=`translate(${panOffsetX}px, ${panOffsetY}px) scale(${currentZoom})`}
+document.getElementById('modalImage').addEventListener('wheel',e=>{e.preventDefault();e.deltaY<0?zoomIn():zoomOut()});
+document.getElementById('modalImage').addEventListener('mousedown',function(e){if(isPanning){panStartX=e.clientX-panOffsetX;panStartY=e.clientY-panOffsetY;this.style.cursor='grabbing'}});
+document.getElementById('modalImage').addEventListener('mousemove',function(e){if(isPanning&&panStartX!==null){panOffsetX=e.clientX-panStartX;panOffsetY=e.clientY-panStartY;updateImageTransform()}});
+['mouseup','mouseleave'].forEach(evt=>document.getElementById('modalImage').addEventListener(evt,function(){panStartX=null;panStartY=null;this.style.cursor='grab'}));
+
+function confirmDelete(id,t){currentDeleteId=id;document.getElementById('deleteViolationId').textContent=id;document.getElementById('deleteViolationTime').textContent=t;document.getElementById('deleteModal').style.display='block'}
+function closeDeleteModal(){document.getElementById('deleteModal').style.display='none';currentDeleteId=null}
+function deleteViolation(){
+  if(currentDeleteId){
+    const f=document.createElement('form');
+    f.method='POST';
+    f.action=`/violations/${currentDeleteId}/delete/`;
+    const csrf=document.querySelector('[name=csrfmiddlewaretoken]').value;
+    const i=document.createElement('input');
+    i.type='hidden'; i.name='csrfmiddlewaretoken'; i.value=csrf;
+    f.appendChild(i);
+    document.body.appendChild(f);
+    f.submit();
+  }
+}
+
+document.getElementById('selectAll').addEventListener('change',function(){
+  document.querySelectorAll('.violation-checkbox').forEach(cb=>cb.checked=this.checked);
+  updateSelectedCount();
+});
+document.querySelectorAll('.violation-checkbox').forEach(cb=>cb.addEventListener('change',updateSelectedCount));
+
+function updateSelectedCount(){
+  const n=document.querySelectorAll('.violation-checkbox:checked').length;
+  document.getElementById('selectedCount').textContent=`(${n} selected)`;
+  document.getElementById('deleteSelectedBtn').disabled=n===0;
+}
+
+function deleteSelected(){
+  const selected=document.querySelectorAll('.violation-checkbox:checked');
+  if(selected.length===0) return;
+  if(!confirm(`Delete ${selected.length} violation(s)? This cannot be undone.`)) return;
+  document.getElementById('bulkDeleteForm').submit();
+}
+
+window.onclick=function(e){
+  const im=document.getElementById('imageModal'), dm=document.getElementById('deleteModal');
+  if(e.target===im) closeModal();
+  if(e.target===dm) closeDeleteModal();
+};
+document.addEventListener('keydown',function(e){
+  if(e.key==='Escape'){closeModal();closeDeleteModal()}
+});
+updateSelectedCount();
+
+function showNotification(message, type) {
+    // Create notification element
+    const notification = document.createElement('div');
+    notification.className = `alert alert-${type === 'success' ? 'success' : 'info'} alert-dismissible fade show`;
+    notification.style.position = 'fixed';
+    notification.style.top = '20px';
+    notification.style.right = '20px';
+    notification.style.zIndex = '9999';
+    notification.style.minWidth = '300px';
+    notification.innerHTML = `
+        ${message}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    `;
+    
+    document.body.appendChild(notification);
+    
+    // Auto-remove after 3 seconds
+    setTimeout(() => {
+        if (notification.parentNode) {
+            notification.parentNode.removeChild(notification);
+        }
+    }, 3000);
+}
+
+
+</script>
+<!-- Bootstrap JS bundle (includes Popper) – required for dropdowns -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+</body>
+</html>

@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SRAS - Violation Detail</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/static/cozy-dark.css">
+    <script defer src="/static/theme-toggle.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+        }
+
+        .main-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            margin-top: 20px;
+        }
+
+        .navbar {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar-brand {
+            font-weight: 600;
+            font-size: 1.5rem;
+            color: white !important;
+        }
+
+        .nav-link {
+            color: rgba(255, 255, 255, 0.8) !important;
+            transition: color 0.3s ease;
+            font-weight: 500;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            color: white !important;
+        }
+
+        .navbar-toggler {
+            border: none;
+            color: white;
+        }
+
+        .navbar-toggler:focus {
+            box-shadow: none;
+        }
+
+        .dropdown-menu {
+            background: white;
+            border: none;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+
+        .dropdown-item {
+            color: #2c3e50;
+            transition: all 0.3s ease;
+        }
+
+        .dropdown-item:hover {
+            background: #f8f9fa;
+            color: #667eea;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            font-weight: 300;
+        }
+
+        .header p {
+            opacity: 0.9;
+            font-size: 1.1em;
+        }
+
+        .content {
+            padding: 20px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: #3498db;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #2980b9;
+        }
+
+        .btn-secondary {
+            background: #95a5a6;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #7f8c8d;
+        }
+
+        .btn-danger {
+            background: #e74c3c;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #c0392b;
+        }
+
+        .violation-detail {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 20px;
+        }
+
+        .image-section {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .violation-image {
+            width: 100%;
+            height: auto;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .info-section {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .info-grid {
+            display: grid;
+            gap: 15px;
+        }
+
+        .info-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 5px;
+        }
+
+        .info-label {
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .info-value {
+            color: #6c757d;
+        }
+
+        .hash-display {
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            background: #2c3e50;
+            color: #00ff00;
+            padding: 10px;
+            border-radius: 5px;
+            word-break: break-all;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .delete-modal {
+            display: none;
+            position: fixed;
+            z-index: 1001;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+        }
+
+        .delete-modal-content {
+            background-color: white;
+            margin: 15% auto;
+            padding: 30px;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 500px;
+            text-align: center;
+        }
+
+        .delete-modal h3 {
+            color: #e74c3c;
+            margin-bottom: 20px;
+        }
+
+        .delete-modal-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .main-container {
+                margin: 10px;
+                border-radius: 10px;
+            }
+            
+            .navbar {
+                padding: 10px 0;
+            }
+            
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            .violation-detail {
+                grid-template-columns: 1fr;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+            }
+            
+            .nav-links {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="{% url 'dashboard' %}">
+                <i class="fas fa-shield-alt"></i> SRAS
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'dashboard' %}">
+                            <i class="fas fa-tachometer-alt"></i> Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'monitor' %}">
+                            <i class="fas fa-video"></i> Live Monitor
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="{% url 'violation_list' %}">
+                            <i class="fas fa-list"></i> Violations
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'enforcer_list' %}">
+                            <i class="fas fa-users"></i> Enforcers
+                        </a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav">
+                    <li class="nav-item d-flex align-items-center me-2">
+                        <a href="#" class="btn btn-sm btn-outline-primary" data-theme-toggle>🌙 Dark</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-user"></i> <span class="d-none d-md-inline">{{ user.username }}</span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="{% url 'logout' %}">
+                                <i class="fas fa-sign-out-alt"></i> Logout
+                            </a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="main-container">
+        <div class="header">
+            <h1>📋 Violation Details</h1>
+            <p>Detailed information about violation #{{ violation.id }}</p>
+        </div>
+        
+        <div class="content">
+            <div class="nav-links">
+                <a href="{% url 'monitor' %}" class="btn btn-primary">🔴 Live Monitor</a>
+                <a href="{% url 'violation_list' %}" class="btn btn-secondary">📋 Back to List</a>
+            </div>
+
+            <div class="violation-detail">
+                <div class="image-section">
+                    <h3>📸 Violation Image</h3>
+                    <img src="{% url 'violation_image' violation.id %}" 
+                         alt="Violation Image" 
+                         class="violation-image">
+                </div>
+
+                <div class="info-section">
+                    <h3>📊 Violation Information</h3>
+                    <div class="info-grid">
+                        
+                        
+                        <div class="info-item">
+                            <span class="info-label">Date & Time:</span>
+                            <span class="info-value">{{ violation.timestamp|date:"F d, Y" }} at {{ violation.timestamp|time:"H:i:s" }}</span>
+                        </div>
+                        
+                        <div class="info-item">
+                            <span class="info-label">Plate Number:</span>
+                            <span class="info-value">{{ violation.plate_number|default:"UNKNOWN" }}</span>
+                        </div>
+                        
+                        <div class="info-item">
+                            <span class="info-label">Camera:</span>
+                            <span class="info-value">{{ violation.camera.name }}</span>
+                        </div>
+                        
+                        <div class="info-item">
+                            <span class="info-label">Camera URL:</span>
+                            <span class="info-value">{{ violation.camera.stream_url }}</span>
+                        </div>
+                        
+                        <div class="info-item">
+                            <span class="info-label">Verified By:</span>
+                            <span class="info-value">{{ violation.verified_by }}</span>
+                        </div>
+                        
+                        
+
+                        <div class="info-item">
+                            <span class="info-label">Rider Hash:</span>
+                            <span class="info-value">{{ violation.rider_hash|default:"N/A" }}</span>
+                        </div>
+                    </div>
+
+                    
+
+                    <div class="action-buttons">
+                        <button class="btn btn-danger" onclick="confirmDelete()">
+                            🗑️ Delete Violation
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div id="deleteModal" class="delete-modal">
+        <div class="delete-modal-content">
+            <h3>🗑️ Confirm Deletion</h3>
+            <p>Are you sure you want to delete violation #{{ violation.id }}?</p>
+            <p><strong>Time:</strong> {{ violation.timestamp|date:"M d, Y H:i" }}</p>
+            <p><strong>Plate:</strong> {{ violation.plate_number|default:"UNKNOWN" }}</p>
+            <p>This action cannot be undone.</p>
+            <div class="delete-modal-buttons">
+                <button class="btn btn-secondary" onclick="closeDeleteModal()">❌ Cancel</button>
+                <button class="btn btn-danger" onclick="deleteViolation()">🗑️ Delete</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function confirmDelete() {
+            document.getElementById('deleteModal').style.display = 'block';
+        }
+
+        function closeDeleteModal() {
+            document.getElementById('deleteModal').style.display = 'none';
+        }
+
+        function deleteViolation() {
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = '{% url "delete_violation" violation.id %}';
+            
+            const csrfToken = document.createElement('input');
+            csrfToken.type = 'hidden';
+            csrfToken.name = 'csrfmiddlewaretoken';
+            csrfToken.value = '{{ csrf_token }}';
+            form.appendChild(csrfToken);
+            
+            document.body.appendChild(form);
+            form.submit();
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const deleteModal = document.getElementById('deleteModal');
+            if (event.target === deleteModal) {
+                closeDeleteModal();
+            }
+        }
+
+        // Close modal with Escape key
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                closeDeleteModal();
+            }
+        });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html> 

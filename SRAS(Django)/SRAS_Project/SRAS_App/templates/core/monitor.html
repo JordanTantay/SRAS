@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SRAS - Camera Feed</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="/static/cozy-dark.css">
+    <script defer src="/static/theme-toggle.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+        }
+
+        .main-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            margin-top: 20px;
+        }
+
+        .navbar {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar-brand {
+            font-weight: 600;
+            font-size: 1.5rem;
+            color: white !important;
+        }
+
+        .nav-link {
+            color: rgba(255, 255, 255, 0.8) !important;
+            transition: color 0.3s ease;
+            font-weight: 500;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            color: white !important;
+        }
+
+        .navbar-toggler {
+            border: none;
+            color: white;
+        }
+
+        .navbar-toggler:focus {
+            box-shadow: none;
+        }
+
+        .dropdown-menu {
+            background: white;
+            border: none;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+
+        .dropdown-item {
+            color: #2c3e50;
+            transition: all 0.3s ease;
+        }
+
+        .dropdown-item:hover {
+            background: #f8f9fa;
+            color: #667eea;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            font-weight: 300;
+        }
+
+        .header p {
+            opacity: 0.9;
+            font-size: 1.1em;
+        }
+
+        .content {
+            padding: 20px;
+            text-align: center;
+        }
+
+        .video-container {
+            position: relative;
+            background: #000;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            display: inline-block;
+            margin-bottom: 20px;
+        }
+
+        .video-feed {
+            max-width: 100%;
+            border-radius: 10px;
+        }
+
+        .video-overlay {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 5px;
+            font-size: 0.9em;
+            font-family: 'Courier New', monospace;
+        }
+
+        .info-card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            border-left: 4px solid #3498db;
+            text-align: center;
+            max-width: 600px;
+            margin: 0 auto 20px auto;
+        }
+
+        .info-card h3 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-size: 1.2em;
+        }
+
+        .info-card p {
+            color: #6c757d;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        .status-indicator {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-right: 8px;
+            animation: pulse 2s infinite;
+        }
+
+        .status-live {
+            background: #28a745;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+
+        .controls {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .control-btn {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: background 0.3s ease;
+        }
+
+        .control-btn:hover {
+            background: #2980b9;
+        }
+
+        .loading {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 400px;
+            color: #6c757d;
+            font-size: 1.1em;
+        }
+
+        .spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #3498db;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin-right: 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .statistics-section {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .statistics-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .statistics-header h3 {
+            color: #2c3e50;
+            font-size: 1.5em;
+            margin-bottom: 10px;
+        }
+
+        .statistics-header p {
+            color: #6c757d;
+            font-size: 1em;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 300px;
+            margin: 20px 0;
+        }
+
+        /* Responsive improvements */
+        @media (max-width: 768px) {
+            .main-container {
+                margin: 10px;
+                border-radius: 10px;
+            }
+            
+            .navbar {
+                padding: 10px 0;
+            }
+            
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            .info-card {
+                margin: 10px;
+                padding: 15px;
+            }
+            
+            .statistics-section {
+                margin: 10px;
+                padding: 15px;
+            }
+        }
+
+        .stats-summary {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 20px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 8px;
+            text-align: center;
+            min-width: 120px;
+        }
+
+        .stat-card h4 {
+            font-size: 0.9em;
+            margin-bottom: 5px;
+            opacity: 0.9;
+        }
+
+        .stat-card .stat-value {
+            font-size: 1.5em;
+            font-weight: bold;
+        }
+
+        .loading-stats {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 200px;
+            color: #6c757d;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg">
+        <div class="container">
+            <a class="navbar-brand" href="{% url 'dashboard' %}">
+                <i class="fas fa-shield-alt"></i> SRAS
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'dashboard' %}">
+                            <i class="fas fa-tachometer-alt"></i> Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="{% url 'monitor' %}">
+                            <i class="fas fa-video"></i> Live Monitor
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'violation_list' %}">
+                            <i class="fas fa-list"></i> Violations
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'enforcer_list' %}">
+                            <i class="fas fa-users"></i> Enforcers
+                        </a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav">
+                    <li class="nav-item d-flex align-items-center me-2">
+                        <a href="#" class="btn btn-sm btn-outline-primary" data-theme-toggle>🌙 Dark</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-user"></i> {{ user.username }}
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="{% url 'logout' %}">
+                                <i class="fas fa-sign-out-alt"></i> Logout
+                            </a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="main-container">
+        <div class="header">
+            <h1>🛡️ SRAS Live Detection</h1>
+            <p>Real-time Safety Helmet Detection</p>
+        </div>
+        
+        <div class="content">
+            <div class="video-container">
+                <img id="videoFeed" class="video-feed" src="http://localhost:8081/video" alt="Live Detection Feed">
+                <div class="video-overlay">
+                    <span class="status-indicator status-live"></span>
+                    LIVE
+                </div>
+            </div>
+            
+            <div class="info-card">
+                <h3>📊 Stream Information</h3>
+                <p>This live feed is powered by the optimized MJPEG stream server running on port 8081.</p>
+                <p>The detection system runs YOLO inference every 3rd frame for optimal performance.</p>
+                <div class="controls">
+                    <button class="control-btn" onclick="refreshStream()">🔄 Refresh Stream</button>
+                    <a href="{% url 'violation_list' %}" class="control-btn">📋 View Violations</a>
+                </div>
+            </div>
+
+            <!-- Statistics Section -->
+            <div class="statistics-section">
+                <div class="statistics-header">
+                    <h3>📈 Violation Statistics</h3>
+                    <p>Number of detected violators for the last 5 days</p>
+                </div>
+                
+                <div class="chart-container">
+                    <canvas id="violationChart"></canvas>
+                </div>
+                
+                <div class="stats-summary" id="statsSummary">
+                    <div class="loading-stats">
+                        <div class="spinner"></div>
+                        <span>Loading statistics...</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Handle video feed errors
+        document.getElementById('videoFeed').onerror = function() {
+            this.style.display = 'none';
+            const container = document.querySelector('.video-container');
+            container.innerHTML = `
+                <div class="loading">
+                    <div class="spinner"></div>
+                    <div>
+                        <p>Video feed unavailable</p>
+                        <p style="font-size: 0.9em; margin-top: 10px;">Make sure stream_mjpeg.py is running on port 8081</p>
+                        <button class="control-btn" onclick="location.reload()" style="margin-top: 15px;">Retry</button>
+                    </div>
+                </div>
+            `;
+        };
+
+        function refreshStream() {
+            const videoFeed = document.getElementById('videoFeed');
+            videoFeed.src = videoFeed.src + '?t=' + Date.now();
+        }
+
+        // Statistics functionality
+        let violationChart = null;
+
+        async function loadStatistics() {
+            try {
+                const response = await fetch('/api/statistics/');
+                const data = await response.json();
+                
+                if (data.statistics) {
+                    createChart(data.statistics);
+                    updateSummary(data.statistics, data.total_violations);
+                }
+            } catch (error) {
+                console.error('Error loading statistics:', error);
+                document.getElementById('statsSummary').innerHTML = `
+                    <div class="loading-stats">
+                        <span>Error loading statistics</span>
+                    </div>
+                `;
+            }
+        }
+
+        function createChart(statistics) {
+            const ctx = document.getElementById('violationChart').getContext('2d');
+            
+            const labels = statistics.map(stat => stat.display_date);
+            const data = statistics.map(stat => stat.count);
+            
+            // Destroy existing chart if it exists
+            if (violationChart) {
+                violationChart.destroy();
+            }
+            
+            violationChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Violations Detected',
+                        data: data,
+                        backgroundColor: 'rgba(52, 152, 219, 0.8)',
+                        borderColor: 'rgba(52, 152, 219, 1)',
+                        borderWidth: 2,
+                        borderRadius: 5,
+                        borderSkipped: false,
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                            titleColor: 'white',
+                            bodyColor: 'white',
+                            borderColor: '#3498db',
+                            borderWidth: 1,
+                            cornerRadius: 5,
+                            displayColors: false,
+                            callbacks: {
+                                label: function(context) {
+                                    return `Violations: ${context.parsed.y}`;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                color: 'rgba(0, 0, 0, 0.1)'
+                            },
+                            ticks: {
+                                stepSize: 1,
+                                color: '#6c757d'
+                            }
+                        },
+                        x: {
+                            grid: {
+                                display: false
+                            },
+                            ticks: {
+                                color: '#6c757d',
+                                font: {
+                                    weight: 'bold'
+                                }
+                            }
+                        }
+                    },
+                    animation: {
+                        duration: 1000,
+                        easing: 'easeInOutQuart'
+                    }
+                }
+            });
+        }
+
+        function updateSummary(statistics, totalViolations) {
+            const today = statistics[statistics.length - 1];
+            const yesterday = statistics[statistics.length - 2];
+            
+            document.getElementById('statsSummary').innerHTML = `
+                <div class="stat-card">
+                    <h4>Today</h4>
+                    <div class="stat-value">${today.count}</div>
+                </div>
+                <div class="stat-card">
+                    <h4>Yesterday</h4>
+                    <div class="stat-value">${yesterday.count}</div>
+                </div>
+                <div class="stat-card">
+                    <h4>5-Day Total</h4>
+                    <div class="stat-value">${totalViolations}</div>
+                </div>
+                <div class="stat-card">
+                    <h4>Daily Average</h4>
+                    <div class="stat-value">${Math.round(totalViolations / 5)}</div>
+                </div>
+            `;
+        }
+
+        // Load statistics when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            loadStatistics();
+            
+            // Refresh statistics every 5 minutes
+            setInterval(loadStatistics, 300000);
+        });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

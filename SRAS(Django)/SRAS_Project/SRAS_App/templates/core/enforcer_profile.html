@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Profile</title>
+<style>
+  :root { --bg: #0f172a; --panel: #111827; --card: #0b1220; --muted: #94a3b8; --text: #e5e7eb; --accent: #60a5fa; }
+  html, body { height: 100%; }
+  body { margin: 0; background: radial-gradient(1200px 800px at 50% -20%, #1f2937 0, #0b1020 40%, #020617 100%), var(--bg); color: var(--text); font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji"; }
+  .container { min-height: 100%; display: grid; place-items: center; padding: 24px; }
+  .card { width: 100%; max-width: 720px; background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0)); border: 1px solid rgba(148,163,184,0.15); border-radius: 16px; overflow: hidden; box-shadow: 0 10px 40px rgba(2,6,23,0.7); }
+  .header { padding: 24px; background: linear-gradient(135deg, rgba(59,130,246,0.15), rgba(59,130,246,0)); border-bottom: 1px solid rgba(148,163,184,0.15); display: flex; align-items: center; gap: 16px; }
+  .avatar { width: 64px; height: 64px; border-radius: 9999px; background: radial-gradient(circle at 30% 30%, #93c5fd, #2563eb); display: grid; place-items: center; color: white; font-weight: 700; font-size: 24px; letter-spacing: 0.5px; box-shadow: inset 0 0 20px rgba(255,255,255,0.15); }
+  .title { margin: 0; font-size: 22px; }
+  .subtitle { margin: 4px 0 0; color: var(--muted); font-size: 14px; }
+  .content { padding: 24px; display: grid; gap: 16px; background: linear-gradient(180deg, rgba(17,24,39,0.35), rgba(17,24,39,0.1)); }
+  .grid { display: grid; grid-template-columns: 1fr; gap: 16px; }
+  @media (min-width: 640px) { .grid { grid-template-columns: 1fr 1fr; } }
+  .field { background: rgba(2,6,23,0.35); border: 1px solid rgba(148,163,184,0.15); border-radius: 12px; padding: 16px; }
+  .label { display: block; color: var(--muted); font-size: 12px; letter-spacing: 0.04em; text-transform: uppercase; margin-bottom: 6px; }
+  .value { font-size: 16px; font-weight: 600; color: #f8fafc; word-break: break-word; }
+  .footer { padding: 18px 24px; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid rgba(148,163,184,0.15); background: linear-gradient(180deg, rgba(59,130,246,0), rgba(59,130,246,0.08)); }
+  .badge { padding: 6px 10px; border-radius: 999px; font-size: 12px; font-weight: 700; letter-spacing: 0.03em; background: rgba(59,130,246,0.15); color: #93c5fd; border: 1px solid rgba(96,165,250,0.3); }
+  .actions { display: flex; gap: 10px; }
+  .btn { padding: 10px 14px; border-radius: 10px; border: 1px solid rgba(148,163,184,0.2); background: rgba(2,6,23,0.35); color: #e5e7eb; font-weight: 600; cursor: pointer; text-decoration: none; transition: transform .12s ease, background .2s ease, border-color .2s ease; }
+  .btn:hover { transform: translateY(-1px); border-color: rgba(96,165,250,0.6); background: rgba(30,58,138,0.35); }
+  .btn--primary { background: linear-gradient(135deg, rgba(37,99,235,0.9), rgba(59,130,246,0.9)); border-color: rgba(59,130,246,0.9); color: white; }
+  .btn--primary:hover { background: linear-gradient(135deg, rgba(37,99,235,1), rgba(59,130,246,1)); }
+</style>
+</head>
+<body>
+  <div class="container">
+    <article class="card">
+      <header class="header">
+        <div class="avatar">{{ user_obj.username|first|upper }}</div>
+        <div>
+          <h1 class="title">{{ user_obj.get_full_name|default:user_obj.username }}</h1>
+          <p class="subtitle">Enforcer Profile</p>
+        </div>
+        <span class="badge" style="margin-left:auto;">{{ user_obj.is_active|yesno:"Active,Inactive" }}</span>
+      </header>
+      <section class="content">
+        <div class="grid">
+          <div class="field">
+            <span class="label">Username</span>
+            <div class="value">{{ user_obj.username }}</div>
+          </div>
+          <div class="field">
+            <span class="label">Email</span>
+            <div class="value">{{ user_obj.email|default:"—" }}</div>
+          </div>
+          <div class="field">
+            <span class="label">First name</span>
+            <div class="value">{{ user_obj.first_name|default:"—" }}</div>
+          </div>
+          <div class="field">
+            <span class="label">Last name</span>
+            <div class="value">{{ user_obj.last_name|default:"—" }}</div>
+          </div>
+          <div class="field">
+            <span class="label">Mobile number</span>
+            <div class="value">{{ enforcer.mobile_number|default:"—" }}</div>
+          </div>
+          <div class="field">
+            <span class="label">Assigned camera</span>
+            <div class="value">{{ enforcer.assigned_camera.name|default:"Unassigned" }}</div>
+          </div>
+        </div>
+      </section>
+      <footer class="footer">
+        <div class="actions">
+          <a href="/logout/" class="btn">Log out</a>
+          <a href="/dashboard/" class="btn">Dashboard</a>
+        </div>
+        <a href="/violations/" class="btn btn--primary">View Violations</a>
+      </footer>
+    </article>
+  </div>
+</body>
+</html>
