@@ -2,197 +2,276 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SRAS - Login</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="/static/cozy-dark.css">
     <style>
         body {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+            background: #f5f5f7;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .login-main-container {
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 16px; /* Prevent zoom on iOS */
         }
-        .login-container {
-            background: white;
-            border-radius: 20px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-            padding: 40px;
+        .login-box {
+            display: flex;
+            width: 900px;
+            max-width: 98vw;
+            min-height: 540px;
+            background: #d2c1b6;
+            border-radius: 18px;
+            box-shadow: 0 8px 32px 0 rgba(27, 60, 83, 0.10);
+            overflow: hidden;
+            position: relative;
+        }
+        .login-left-panel {
+            flex: 1.2;
+            background: linear-gradient(120deg, #1b3c53 0%, #234c6a 100%);
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 56px 48px 56px 56px;
+            position: relative;
+        }
+        .login-left-panel::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: url('/static/login-bg.jpg') center center/cover no-repeat;
+            opacity: 0.10;
+            z-index: 0;
+        }
+        .login-left-content {
+            position: relative;
+            z-index: 1;
             width: 100%;
-            max-width: 400px;
-            margin: 20px;
         }
-        @media (max-width: 768px) {
-            .login-container {
-                padding: 30px 20px;
-                margin: 15px;
-                border-radius: 15px;
-            }
+        .login-left-menu {
+            font-size: 1.6rem;
+            margin-bottom: 32px;
+            opacity: 0.7;
         }
-        .login-header {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-        .login-header h1 {
-            color: #2c3e50;
-            font-weight: 700;
-            font-size: 2.2rem;
-            margin-bottom: 10px;
-        }
-        @media (max-width: 768px) {
-            .login-header h1 {
-                font-size: 1.8rem;
-            }
-        }
-        .login-header p {
-            color: #6c757d;
-            font-size: 1rem;
-        }
-        @media (max-width: 768px) {
-            .login-header p {
-                font-size: 0.9rem;
-            }
-        }
-        .form-group {
-            margin-bottom: 20px;
-        }
-        .form-label {
+        .login-left-title {
+            font-size: 1.5rem;
             font-weight: 600;
-            color: #2c3e50;
-            margin-bottom: 8px;
-            font-size: 0.95rem;
+            margin-bottom: 18px;
+            letter-spacing: 0.5px;
         }
-        .form-control {
-            border-radius: 10px;
-            border: 2px solid #e9ecef;
-            padding: 15px;
-            font-size: 16px; /* Prevent zoom on iOS */
-            transition: all 0.3s ease;
-            min-height: 48px; /* Better touch target */
+        .login-left-desc {
+            font-size: 1.1rem;
+            margin-bottom: 36px;
+            opacity: 0.97;
         }
-        @media (max-width: 768px) {
-            .form-control {
-                padding: 12px 15px;
-                font-size: 16px;
-            }
+        .login-left-form {
+            width: 100%;
+            max-width: 340px;
         }
-        .form-control:focus {
-            border-color: #667eea;
-            box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+        .login-left-form label {
+            font-size: 0.98rem;
+            margin-bottom: 6px;
+            color: #fff;
+            opacity: 0.9;
         }
-        .btn-login {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        .login-left-form .input-group {
+            margin-bottom: 18px;
+        }
+        .login-left-form .form-control {
+            background: transparent;
             border: none;
-            padding: 15px;
-            border-radius: 10px;
+            border-bottom: 2px solid #fff;
+            border-radius: 0;
+            color: #fff;
+            font-size: 1.05rem;
+            padding-left: 0;
+            box-shadow: none;
+        }
+        .login-left-form .form-control:focus {
+            background: transparent;
+            border-bottom: 2px solid #fff;
+            color: #fff;
+            box-shadow: none;
+        }
+        .login-left-form .input-group-text {
+            background: transparent;
+            border: none;
+            color: #fff;
+            font-size: 1.1rem;
+            padding-left: 0;
+        }
+        .login-left-form .btn {
+            background: #fff;
+            color: #1b3c53;
             font-weight: 600;
-            font-size: 16px;
+            border-radius: 24px;
+            padding: 8px 28px;
+            margin-top: 8px;
+            box-shadow: 0 2px 8px rgba(124,92,255,0.08);
+            border: none;
+            letter-spacing: 0.5px;
+            transition: background 0.2s, color 0.2s;
+        }
+        .login-left-form .btn:hover {
+            background: #ece6ff;
+            color: #6a82fb;
+        }
+        .login-right-panel {
+            flex: 1.3;
+            background: #fff;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 56px 56px 56px 48px;
+            position: relative;
+        }
+        .login-right-title {
+            color: #1b3c53;
+            font-size: 1.35rem;
+            font-weight: 600;
+            margin-bottom: 32px;
+            letter-spacing: 0.5px;
+        }
+        .login-form {
             width: 100%;
-            min-height: 48px; /* Better touch target */
-            transition: all 0.3s ease;
+            max-width: 340px;
         }
-        @media (max-width: 768px) {
-            .btn-login {
-                padding: 12px;
-                font-size: 16px;
+        .login-form .input-group {
+            margin-bottom: 22px;
+        }
+        .login-form .form-control {
+            background: transparent;
+            border: none;
+            border-bottom: 2px solid #234c6a;
+            border-radius: 0;
+            color: #234c6a;
+            font-size: 1.08rem;
+            padding-left: 0;
+            box-shadow: none;
+        }
+        .login-form .form-control:focus {
+            background: transparent;
+            border-bottom: 2px solid #456882;
+            color: #234c6a;
+            box-shadow: none;
+        }
+        .login-form .input-group-text {
+            background: transparent;
+            border: none;
+            color: #234c6a;
+            font-size: 1.1rem;
+            padding-left: 0;
+        }
+        .login-form .btn {
+            background: linear-gradient(90deg, #234c6a 0%, #456882 100%);
+            color: #fff;
+            font-weight: 600;
+            border-radius: 8px;
+            padding: 12px 0;
+            width: 100%;
+            margin-top: 8px;
+            box-shadow: 0 2px 8px rgba(35,76,106,0.08);
+            border: none;
+            letter-spacing: 0.5px;
+            font-size: 1.08rem;
+            transition: background 0.2s, color 0.2s;
+        }
+        .login-form .btn:hover {
+            background: #456882;
+            color: #fff;
+        }
+        .login-form .form-text {
+            color: #234c6a;
+            font-size: 0.97rem;
+            margin-top: 8px;
+        }
+        .login-form .login-links {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 12px;
+            font-size: 0.97rem;
+        }
+        .login-form .login-links a {
+            color: #234c6a;
+            text-decoration: underline;
+            opacity: 0.85;
+            transition: opacity 0.2s;
+        }
+        .login-form .login-links a:hover {
+            opacity: 1;
+        }
+        @media (max-width: 900px) {
+            .login-box {
+                flex-direction: column;
+                min-width: 320px;
+                width: 98vw;
+                min-height: 0;
+            }
+            .login-left-panel, .login-right-panel {
+                padding: 32px 18px;
             }
         }
-        .btn-login:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-        }
-        .alert {
-            border-radius: 10px;
-            margin-bottom: 20px;
-            font-size: 0.95rem;
-        }
-        .input-group-text {
-            background: #f8f9fa;
-            border: 2px solid #e9ecef;
-            border-right: none;
-            border-radius: 10px 0 0 10px;
-            min-height: 48px;
-        }
-        .input-group .form-control {
-            border-left: none;
-            border-radius: 0 10px 10px 0;
-        }
-        .brand-logo {
-            font-size: 3rem;
-            color: #667eea;
-            margin-bottom: 10px;
-        }
-        @media (max-width: 768px) {
-            .brand-logo {
-                font-size: 2.5rem;
+        @media (max-width: 600px) {
+            .login-box {
+                min-width: 0;
+                width: 100vw;
             }
-        }
-        /* Prevent horizontal scroll */
-        @media (max-width: 768px) {
-            body {
-                overflow-x: hidden;
+            .login-left-panel, .login-right-panel {
+                padding: 18px 6px;
             }
         }
     </style>
 </head>
 <body>
-    <div class="login-container">
-        <div class="login-header">
-            <div class="brand-logo">
-                <i class="fas fa-shield-alt"></i>
-            </div>
-            <h1>SRAS</h1>
-            <p>Safe Road Alert System</p>
-        </div>
-
-        {% if messages %}
-            {% for message in messages %}
-                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
-                    <i class="fas fa-{% if message.tags == 'error' %}exclamation-triangle{% else %}check-circle{% endif %}"></i>
-                    {{ message }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                </div>
-            {% endfor %}
-        {% endif %}
-
-        <form method="post">
-            {% csrf_token %}
-            <div class="form-group">
-                <label for="username" class="form-label">Username</label>
-                <div class="input-group">
-                    <span class="input-group-text">
-                        <i class="fas fa-user"></i>
-                    </span>
-                    <input type="text" class="form-control" id="username" name="username" placeholder="Enter your username" required>
+    <div class="login-main-container">
+        <div class="login-box">
+            <div class="login-left-panel">
+                <div class="login-left-content">
+                    <div class="login-left-title" style="display: flex; align-items: center; gap: 10px;">
+                        <i class="fas fa-shield-alt" style="font-size:2rem;"></i>
+                        <span style="font-size:1.4rem; font-weight:700; letter-spacing:2px;">SRAS</span>
+                    </div>
+                    <div class="login-left-desc" style="margin-top: 18px;">
+                        Safe Road Alert System<br>
+                        Please sign in to continue. Contact your administrator for access credentials.
+                    </div>
                 </div>
             </div>
-
-            <div class="form-group">
-                <label for="password" class="form-label">Password</label>
-                <div class="input-group">
-                    <span class="input-group-text">
-                        <i class="fas fa-lock"></i>
-                    </span>
-                    <input type="password" class="form-control" id="password" name="password" placeholder="Enter your password" required>
+            <div class="login-right-panel">
+                <div class="login-right-title">
+                    Sign in
                 </div>
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                            {{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+                <form method="post" autocomplete="off" class="login-form">
+                    {% csrf_token %}
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fas fa-user"></i></span>
+                        <input type="text" class="form-control" id="username" name="username" placeholder="Username" required>
+                    </div>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+                        <input type="password" class="form-control" id="password" name="password" placeholder="Password" required>
+                    </div>
+                    <button type="submit" class="btn">Sign in</button>
+                </form>
             </div>
-
-            <button type="submit" class="btn btn-login">
-                <i class="fas fa-sign-in-alt"></i> Sign In
-            </button>
-        </form>
-
-        <div class="text-center mt-4">
-            <small class="text-muted">
-                <i class="fas fa-info-circle"></i> 
-                Contact administrator for access credentials
-            </small>
         </div>
     </div>
-
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
-</html> 
+</html>

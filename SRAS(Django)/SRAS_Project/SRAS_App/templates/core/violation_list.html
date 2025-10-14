@@ -6,32 +6,27 @@
     <title>SRAS - Violation List</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="/static/cozy-dark.css">
-    <script defer src="/static/theme-toggle.js"></script>
     <style>
         *{margin:0;padding:0;box-sizing:border-box}
-        body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);min-height:100vh;margin:0;padding:0}
-        .main-container{max-width:1400px;margin:0 auto;background:rgba(255,255,255,0.95);border-radius:15px;box-shadow:0 20px 40px rgba(0,0,0,0.1);overflow:hidden;margin-top:20px}
-        .navbar{background:linear-gradient(135deg,#2c3e50 0%,#34495e 100%);padding:15px 0;position:sticky;top:0;z-index:1000;box-shadow:0 2px 10px rgba(0,0,0,0.1)}
-        .navbar-brand{font-weight:600;font-size:1.5rem;color:#fff!important}
-        .nav-link{color:rgba(255,255,255,0.8)!important;transition:color .3s ease;font-weight:500}
-        .nav-link:hover,.nav-link.active{color:#fff!important}
-        .navbar-toggler{border:none;color:#fff}
-        .navbar-toggler:focus{box-shadow:none}
-        .dropdown-menu{background:#fff;border:none;box-shadow:0 5px 15px rgba(0,0,0,0.1);border-radius:8px}
-        .dropdown-item{color:#2c3e50;transition:all .3s ease}
-        .dropdown-item:hover{background:#f8f9fa;color:#667eea}
-
-        .header{background:linear-gradient(135deg,#2c3e50 0%,#34495e 100%);color:#fff;padding:20px;text-align:center}
+        body{
+            font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;
+            background: #d2c1b6;
+            min-height:100vh;
+            margin:0;
+            padding:0
+        }
+        .header{
+            background: #1B3C53;color:#fff;
+            padding: 8px 0 8px 0;
+            text-align:center
+        }
         .header h1{font-size:2.5em;margin-bottom:10px;font-weight:300}
         .header p{opacity:.9;font-size:1.1em}
-
-        .content{padding:20px}
+        .content{padding:0}
         .stats-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:20px;margin-bottom:30px}
         .stat-card{background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);color:#fff;padding:20px;border-radius:10px;text-align:center;box-shadow:0 5px 15px rgba(0,0,0,0.1)}
         .stat-card h3{font-size:2em;margin-bottom:5px}
         .stat-card p{opacity:.9;font-size:.9em}
-
         .filters{background:#fff;padding:20px;border-radius:10px;margin-bottom:20px;box-shadow:0 5px 15px rgba(0,0,0,0.1)}
         .filters h3{margin-bottom:15px;color:#2c3e50}
         .filter-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:15px;margin-bottom:15px}
@@ -39,33 +34,37 @@
         .filter-group label{margin-bottom:5px;font-weight:bold;color:#2c3e50}
         .filter-group input,.filter-group select{padding:10px;border:1px solid #ddd;border-radius:5px;font-size:14px}
         .filter-buttons{display:flex;gap:10px;justify-content:center}
-
         .btn{padding:10px 20px;border:none;border-radius:5px;cursor:pointer;font-size:14px;text-decoration:none;display:inline-block;transition:all .3s ease}
         .btn-primary{background:#3498db;color:#fff}.btn-primary:hover{background:#2980b9}
         .btn-secondary{background:#95a5a6;color:#fff}.btn-secondary:hover{background:#7f8c8d}
         .btn-danger{background:#e74c3c;color:#fff}.btn-danger:hover{background:#c0392b}
-
-        .bulk-actions{background:#fff;padding:15px;border-radius:10px;margin-bottom:20px;box-shadow:0 5px 15px rgba(0,0,0,0.1);display:flex;justify-content:space-between;align-items:center}
-
-        .violations-table{background:#fff;border-radius:10px;overflow:hidden;box-shadow:0 5px 15px rgba(0,0,0,0.1)}
+        .bulk-actions{
+            background:#fff;padding:
+            15px;border-radius:10px;
+            margin-bottom:20px;
+            box-shadow:0 5px 15px rgba(0,0,0,0.1);
+            display:flex;
+            justify-content:space-between;
+            align-items:center
+        }
+        .violations-table{
+            background:#fff;
+            overflow:hidden;
+            box-shadow:0 5px 15px rgba(0,0,0,0.1);
+        }
         .table-header{background:#2c3e50;color:#fff;padding:15px;display:grid;grid-template-columns:40px 80px 1fr 220px 120px 100px 150px;gap:15px;font-weight:bold}
         .table-row{display:grid;grid-template-columns:40px 80px 1fr 220px 120px 100px 150px;gap:15px;padding:15px;border-bottom:1px solid #eee;align-items:center}
         .table-row:hover{background:#f8f9fa}.table-row:last-child{border-bottom:none}
-
         .violation-image{width:60px;height:40px;object-fit:cover;border-radius:5px;cursor:pointer;transition:transform .3s ease}
         .violation-image:hover{transform:scale(1.1)}
-
         .plate-cell{display:flex;flex-direction:column;gap:6px}
         .plate-text{font-weight:600}
         .plate-thumb{width:120px;height:auto;border-radius:5px;cursor:pointer;object-fit:contain;box-shadow:0 2px 6px rgba(0,0,0,0.08)}
         .plate-thumb:hover{transform:scale(1.03);transition:transform .2s ease}
-
         .pagination{display:flex;justify-content:center;align-items:center;gap:10px;margin-top:20px;padding:20px}
         .pagination a,.pagination span{padding:8px 12px;border:1px solid #ddd;border-radius:5px;text-decoration:none;color:#333}
         .pagination .current{background:#3498db;color:#fff;border-color:#3498db}
-
         .no-violations{text-align:center;padding:40px;color:#6c757d;font-size:1.1em}
-
         .modal{display:none;position:fixed;z-index:1000;left:0;top:0;width:100%;height:100%;background-color:rgba(0,0,0,0.8)}
         .modal-content{background:#fff;margin:5% auto;padding:20px;border-radius:10px;width:80%;max-width:800px;max-height:80%;overflow-y:auto}
         .close{color:#aaa;float:right;font-size:28px;font-weight:bold;cursor:pointer}.close:hover{color:#000}
@@ -74,301 +73,587 @@
         .zoom-btn{padding:8px 12px;border:1px solid #ddd;background:#fff;border-radius:5px;cursor:pointer;font-size:12px;transition:all .3s ease}
         .zoom-btn:hover{background:#f8f9fa;border-color:#007bff}
         .image-container{overflow:hidden;border-radius:8px;background:#f8f9fa;padding:10px}
-
         .delete-modal{display:none;position:fixed;z-index:1001;left:0;top:0;width:100%;height:100%;background-color:rgba(0,0,0,0.8)}
         .delete-modal-content{background:#fff;margin:15% auto;padding:30px;border-radius:10px;width:90%;max-width:500px;text-align:center}
         .delete-modal h3{color:#e74c3c;margin-bottom:20px}
         .delete-modal-buttons{display:flex;justify-content:center;gap:15px;margin-top:20px}
-
+        .violation-list-table thead th {
+            background: #f8fafd !important;
+            border-bottom: 2px solid #f093fb !important;
+        }
+        .violation-list-table tbody tr:hover {
+            background: #f3f0fa !important;
+        }
+        .violation-list-table td, .violation-list-table th {
+            vertical-align: middle;
+        }
+        .violation-list-table thead th {
+            background: #f8fafd !important;
+            border-bottom: 2px solid #f093fb !important;
+        }
+        .violation-list-table tbody tr:hover {
+            background: #f3f0fa !important;
+        }
+        .violation-list-table td, .violation-list-table th {
+            vertical-align: middle;
+        }
         @media (max-width:768px){
-            .main-container{margin:10px;border-radius:10px}
+            .main-container{border-radius:10px}
             .table-header{display:none}
             .table-row{border:1px solid #ddd;margin-bottom:10px;border-radius:5px;grid-template-columns:1fr;gap:5px}
             .stats-cards{grid-template-columns:1fr}
             .filter-row{grid-template-columns:1fr}
             .bulk-actions{flex-direction:column;gap:10px}
         }
+    .btn-dashboard-view {
+        background: #764ba2;
+        color: #fff !important;
+        border-radius: 10px;
+        font-weight: 700;
+        font-size: 1em;
+        padding: 10px 20px;
+        box-shadow: 0 2px 8px rgba(120,75,162,0.10);
+        border: none;
+        transition: background 0.2s, box-shadow 0.2s;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+    }
+    .btn-dashboard-view:hover, .btn-dashboard-view:focus {
+        background: #5a378a;
+        color: #fff !important;
+        box-shadow: 0 4px 16px rgba(120,75,162,0.18);
+        text-decoration: none;
+    }
+    .btn-outline-view {
+        background: #fff;
+        color: #007bff !important;
+        border: 2px solid #007bff;
+        border-radius: 999px;
+        font-weight: 700;
+        font-size: 0.92em;
+        padding: 5px 14px;
+        box-shadow: none;
+        transition: background 0.18s, color 0.18s, border-color 0.18s;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        text-decoration: none !important;
+    }
+    .btn-outline-view:hover, .btn-outline-view:focus {
+        background: #007bff;
+        color: #fff !important;
+        border-color: #007bff;
+        text-decoration: none !important;
+    }
+    .btn-outline-delete {
+        background: #fff;
+        color: #e74c3c !important;
+        border: 2px solid #e74c3c;
+        border-radius: 999px;
+        font-weight: 700;
+        font-size: 0.92em;
+        padding: 5px 14px;
+        box-shadow: none;
+        transition: background 0.18s, color 0.18s, border-color 0.18s;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        text-decoration: none !important;
+    }
+    .btn-outline-delete:hover, .btn-outline-delete:focus {
+        background: #e74c3c;
+        color: #fff !important;
+        border-color: #e74c3c;
+        text-decoration: none !important;
+    }
     </style>
 </head>
 <body>
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <div class="container">
-        <a class="navbar-brand" href="{% url 'dashboard' %}"><i class="fas fa-shield-alt"></i> SRAS</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"><span class="navbar-toggler-icon"></span></button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav me-auto">
-                <li class="nav-item"><a class="nav-link" href="{% url 'dashboard' %}"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
-                <li class="nav-item"><a class="nav-link" href="{% url 'monitor' %}"><i class="fas fa-video"></i> Live Monitor</a></li>
-                <li class="nav-item"><a class="nav-link active" href="{% url 'violation_list' %}"><i class="fas fa-list"></i> Violations</a></li>
-                <li class="nav-item"><a class="nav-link" href="{% url 'enforcer_list' %}"><i class="fas fa-users"></i> Enforcers</a></li>
-            </ul>
-            <ul class="navbar-nav">
-                <li class="nav-item d-flex align-items-center me-2">
-                    <a href="#" class="btn btn-sm btn-outline-primary" data-theme-toggle>🌙 Dark</a>
-                </li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
-                       data-bs-toggle="dropdown" aria-expanded="false">
-                        <i class="fas fa-user"></i> {{ user.username }}
+    <!-- Sidebar Navigation -->
+    <div style="display: flex; min-height: 100vh;">
+        <nav id="sidebar" style="width: 240px; background: #234C6A; color: #fff; position: fixed; top: 0; left: 0; height: 100vh; z-index: 1100; display: flex; flex-direction: column; box-shadow: 2px 0 10px rgba(0,0,0,0.08); transition: width 0.2s;">
+            <div style="padding: 32px 24px 16px 24px; border-bottom: 1px solid rgba(255,255,255,0.08);">
+                <a class="navbar-brand" href="{% url 'dashboard' %}" style="color: #fff; font-size: 1.7rem; font-weight: 700; text-decoration: none;">
+                    <i class="fas fa-shield-alt"></i> SRAS
+                </a>
+            </div>
+            <ul class="nav flex-column mt-4" style="flex: 1;">
+                <li class="nav-item mb-2">
+                    <a class="nav-link" href="{% url 'dashboard' %}" style="color: #fff; font-weight: 500;">
+                        <i class="fas fa-tachometer-alt me-2"></i> Dashboard
                     </a>
-                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                        <li><a class="dropdown-item" href="{% url 'logout' %}"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
-                    </ul>
+                </li>
+                <li class="nav-item mb-2">
+                    <a class="nav-link" href="{% url 'monitor' %}" style="color: #fff;">
+                        <i class="fas fa-video me-2"></i> Live Monitor
+                    </a>
+                </li>
+                <li class="nav-item mb-2">
+                    <a class="nav-link active" href="{% url 'violation_list' %}" style="color: #fff;">
+                        <i class="fas fa-list me-2"></i> Violations
+                    </a>
+                </li>
+                <li class="nav-item mb-2">
+                    <a class="nav-link" href="{% url 'enforcer_list' %}" style="color: #fff;">
+                        <i class="fas fa-users me-2"></i> Enforcers
+                    </a>
                 </li>
             </ul>
-        </div>
-    </div>
-</nav>
-
-<div class="main-container">
-    <div class="header">
-        <h1>📊 SRAS Violation Database</h1>
-        <p>View and manage all detected violations</p>
-    </div>
-
-    <div class="content">
-        <div class="nav-links mb-3">
-            <a href="{% url 'monitor' %}" class="btn btn-primary">🔴 Live Monitor</a>
-            <a href="{% url 'violation_list' %}" class="btn btn-success">📋 Violation List</a>
-        </div>
-
-        {% if messages %}
-        <div class="messages">
-            {% for message in messages %}
-            <div class="message {{ message.tags }}">{{ message }}</div>
-            {% endfor %}
-        </div>
-        {% endif %}
-
-        <div class="stats-cards">
-            <div class="stat-card"><h3>{{ total_violations }}</h3><p>Total Violations</p></div>
-            <div class="stat-card"><h3>{{ today_violations }}</h3><p>Today's Violations</p></div>
-            <div class="stat-card"><h3>{{ this_week_violations }}</h3><p>This Week</p></div>
-        </div>
-
-        <div class="filters">
-            <h3>🔍 Search & Filter</h3>
-            <form method="GET" action="{% url 'violation_list' %}">
-                <div class="filter-row">
-                    <div class="filter-group">
-                        <label for="search">Search (Camera)</label>
-                        <input type="text" id="search" name="search" value="{{ search }}" placeholder="Enter plate number or camera name...">
-                    </div>
-                    <div class="filter-group">
-                        <label for="date">Date Filter</label>
-                        <input type="date" id="date" name="date" value="{{ date_filter }}">
-                    </div>
-
+            <div style="padding: 16px 24px; border-top: 1px solid rgba(255,255,255,0.08);">
+                <div class="dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="sidebarDropdown" role="button" data-bs-toggle="dropdown" style="color: #fff;">
+                        <i class="fas fa-user"></i> <span class="d-none d-md-inline">{{ user.username }}</span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="{% url 'logout' %}">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </a></li>
+                    </ul>
                 </div>
-                <div class="filter-buttons">
-                    <button type="submit" class="btn btn-primary">🔍 Search</button>
-                    <a href="{% url 'violation_list' %}" class="btn btn-secondary">🔄 Clear</a>
-                </div>
-            </form>
-        </div>
-
-        {% if page_obj %}
-        <div class="bulk-actions">
-            <div>
-                <input type="checkbox" id="selectAll" class="checkbox-all">
-                <label for="selectAll" class="ms-2">Select All</label>
-                <span id="selectedCount">(0 selected)</span>
             </div>
-            <div>
-                <button class="btn btn-danger" onclick="deleteSelected()" id="deleteSelectedBtn" disabled>🗑️ Delete Selected</button>
-            </div>
-        </div>
-
-        <form id="bulkDeleteForm" method="POST" action="{% url 'delete_multiple_violations' %}">{% csrf_token %}
-            <div class="violations-table">
-                <div class="table-header">
-                    <div>Select</div>
-                    <div>Image</div>
-                    <div>Details</div>
-                    <div>Plate Number</div>
-                    <div>Camera</div>
-                    <div>Date</div>
-                    <div>Actions</div>
-                </div>
-
-                {% for violation in page_obj %}
-                <div class="table-row">
-                    <div>
-                        <input type="checkbox" name="violation_ids" value="{{ violation.id }}" class="violation-checkbox">
-                    </div>
-
-                    <div>
-                        <img src="{% url 'violation_image' violation.id %}"
-                             alt="Violation Image" class="violation-image"
-                             onclick="showImage('{% url 'violation_image' violation.id %}', '{{ violation.timestamp|date:'M d, Y H:i' }}')">
-                    </div>
-
-                    <div>
-                        <strong>ID: {{ violation.id }}</strong><br>
-                        <small>Hash: {{ violation.rider_hash|default:"N/A"|slice:":8" }}...</small>
-                    </div>
-
-                    <div class="plate-cell">
-                        <div class="plate-text">{{ violation.plate_number|default:"UNKNOWN" }}</div>
-                        {% if violation.plate_image %}
-                            <img src="{% url 'violation_plate_image' violation.id %}"
-                                 alt="Plate Image" class="plate-thumb"
-                                 onclick="showImage('{% url 'violation_plate_image' violation.id %}', 'Plate - {{ violation.timestamp|date:'M d, Y H:i' }}')">
-                        {% endif %}
-                    </div>
-
-                    <div>{{ violation.camera.name }}</div>
-                    <div>{{ violation.timestamp|date:"M d, H:i" }}</div>
-                    <div>
-                        <a href="{% url 'violation_detail' violation.id %}" class="btn btn-primary">👁️ View</a>
-                        <button type="button" class="btn btn-danger" onclick="confirmDelete({{ violation.id }}, '{{ violation.timestamp|date:'M d, Y H:i' }}')">🗑️ Delete</button>
-                    </div>
-                </div>
-                {% endfor %}
-            </div>
-        </form>
-
-        {% else %}
-        <div class="no-violations">
-            <h3>📭 No Violations Found</h3>
-            <p>No violations match your search criteria or no violations have been recorded yet.</p>
-        </div>
-        {% endif %}
-
-        {% if page_obj.has_other_pages %}
-        <div class="pagination">
-            {% if page_obj.has_previous %}
-            <a href="?page=1{% if search %}&search={{ search }}{% endif %}{% if date_filter %}&date={{ date_filter }}{% endif %}{% if plate_filter %}&plate={{ plate_filter }}{% endif %}">&laquo; First</a>
-            <a href="?page={{ page_obj.previous_page_number }}{% if search %}&search={{ search }}{% endif %}{% if date_filter %}&date={{ date_filter }}{% endif %}{% if plate_filter %}&plate={{ plate_filter }}{% endif %}">&lsaquo; Previous</a>
-            {% endif %}
-            <span class="current">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
-            {% if page_obj.has_next %}
-            <a href="?page={{ page_obj.next_page_number }}{% if search %}&search={{ search }}{% endif %}{% if date_filter %}&date={{ date_filter }}{% endif %}{% if plate_filter %}&plate={{ plate_filter }}{% endif %}">Next &rsaquo;</a>
-            <a href="?page={{ page_obj.paginator.num_pages }}{% if search %}&search={{ search }}{% endif %}{% if date_filter %}&date={{ date_filter }}{% endif %}{% if plate_filter %}&plate={{ plate_filter }}{% endif %}">Last &raquo;</a>
-            {% endif %}
-        </div>
-        {% endif %}
-    </div>
-</div>
-
-<!-- Image Modal -->
-<div id="imageModal" class="modal">
-    <div class="modal-content">
-        <span class="close" onclick="closeModal()">&times;</span>
-        <h3 id="modalTitle">Violation Image</h3>
-        <div class="image-controls">
-            <button class="zoom-btn" onclick="zoomIn()">🔍+</button>
-            <button class="zoom-btn" onclick="zoomOut()">🔍-</button>
-            <button class="zoom-btn" onclick="resetZoom()">🔄 Reset</button>
-            <button class="zoom-btn" onclick="togglePan()">✋ Pan</button>
-        </div>
-        <div class="image-container">
-            <img id="modalImage" class="modal-image" src="" alt="Violation Image">
-        </div>
-    </div>
-</div>
-
-<!-- Delete Modal -->
-<div id="deleteModal" class="delete-modal">
-    <div class="delete-modal-content">
-        <h3>🗑️ Confirm Deletion</h3>
-        <p>Are you sure you want to delete violation #<span id="deleteViolationId"></span>?</p>
-        <p><strong>Time:</strong> <span id="deleteViolationTime"></span></p>
-        <p>This action cannot be undone.</p>
-        <div class="delete-modal-buttons">
-            <button class="btn btn-secondary" onclick="closeDeleteModal()">❌ Cancel</button>
-            <button class="btn btn-danger" onclick="deleteViolation()">🗑️ Delete</button>
-        </div>
-    </div>
-</div>
-
+        </nav>
+<!-- Sidebar Toggle Button -->
+<!-- Sidebar Toggle Button removed as requested -->
 <script>
-let currentDeleteId=null,currentZoom=1,isPanning=false,panStartX=0,panStartY=0,panOffsetX=0,panOffsetY=0;
+document.addEventListener('DOMContentLoaded', function() {
+    const sidebar = document.getElementById('sidebar');
+    const mainContainer = document.getElementById('mainContainer');
+    const header = document.querySelector('.header');
+    const stickyControls = document.getElementById('sticky-controls');
+    const violationsTable = document.querySelector('.violations-table');
+    let collapsed = false;
 
-function showImage(url,title){document.getElementById('modalImage').src=url;document.getElementById('modalTitle').textContent=title;document.getElementById('imageModal').style.display='block';resetZoom()}
-function closeModal(){document.getElementById('imageModal').style.display='none';resetZoom()}
-function zoomIn(){currentZoom=Math.min(currentZoom*1.5,5);updateImageTransform()}
-function zoomOut(){currentZoom=Math.max(currentZoom/1.5,0.5);updateImageTransform()}
-function resetZoom(){currentZoom=1;panOffsetX=0;panOffsetY=0;updateImageTransform()}
-function togglePan(){isPanning=!isPanning;const panBtn=document.querySelector('.zoom-btn:last-child');panBtn.textContent=isPanning?'✋ Pan (ON)':'✋ Pan';panBtn.style.backgroundColor=isPanning?'#007bff':'';panBtn.style.color=isPanning?'#fff':''}
-function updateImageTransform(){const img=document.getElementById('modalImage');img.style.transform=`translate(${panOffsetX}px, ${panOffsetY}px) scale(${currentZoom})`}
-document.getElementById('modalImage').addEventListener('wheel',e=>{e.preventDefault();e.deltaY<0?zoomIn():zoomOut()});
-document.getElementById('modalImage').addEventListener('mousedown',function(e){if(isPanning){panStartX=e.clientX-panOffsetX;panStartY=e.clientY-panOffsetY;this.style.cursor='grabbing'}});
-document.getElementById('modalImage').addEventListener('mousemove',function(e){if(isPanning&&panStartX!==null){panOffsetX=e.clientX-panStartX;panOffsetY=e.clientY-panStartY;updateImageTransform()}});
-['mouseup','mouseleave'].forEach(evt=>document.getElementById('modalImage').addEventListener(evt,function(){panStartX=null;panStartY=null;this.style.cursor='grab'}));
+    // Add smooth transition to all relevant elements
+    [mainContainer, header, stickyControls, violationsTable].forEach(el => {
+        if (el) el.style.transition = 'margin-left 0.2s, width 0.2s, left 0.2s';
+    });
 
-function confirmDelete(id,t){currentDeleteId=id;document.getElementById('deleteViolationId').textContent=id;document.getElementById('deleteViolationTime').textContent=t;document.getElementById('deleteModal').style.display='block'}
-function closeDeleteModal(){document.getElementById('deleteModal').style.display='none';currentDeleteId=null}
-function deleteViolation(){
-  if(currentDeleteId){
-    const f=document.createElement('form');
-    f.method='POST';
-    f.action=`/violations/${currentDeleteId}/delete/`;
-    const csrf=document.querySelector('[name=csrfmiddlewaretoken]').value;
-    const i=document.createElement('input');
-    i.type='hidden'; i.name='csrfmiddlewaretoken'; i.value=csrf;
-    f.appendChild(i);
-    document.body.appendChild(f);
-    f.submit();
-  }
-}
+    // Helper: Hide all text nodes in sidebar except icons
+    function setSidebarTextVisibility(hide) {
+        sidebar.querySelectorAll('.nav-link, .navbar-brand, .dropdown-toggle').forEach(el => {
+            el.childNodes.forEach(node => {
+                if (node.nodeType === Node.TEXT_NODE) {
+                    if (hide) {
+                        if (!node._originalText) node._originalText = node.textContent;
+                        node.textContent = '';
+                    } else {
+                        node.textContent = node._originalText || node.textContent;
+                    }
+                } else if (node.nodeType === Node.ELEMENT_NODE && node.tagName !== 'I') {
+                    if (hide) {
+                        if (!node.dataset.originalDisplay) node.dataset.originalDisplay = node.style.display;
+                        node.style.display = 'none';
+                    } else {
+                        node.style.display = node.dataset.originalDisplay || '';
+                    }
+                }
+            });
+        });
+        sidebar.querySelectorAll('.dropdown, .sidebar-admin').forEach(adminSection => {
+            adminSection.querySelectorAll('*').forEach(child => {
+                if (child.tagName !== 'I') {
+                    if (hide) {
+                        if (!child.dataset.originalDisplay) child.dataset.originalDisplay = child.style.display;
+                        child.style.display = 'none';
+                    } else {
+                        child.style.display = child.dataset.originalDisplay || '';
+                    }
+                }
+            });
+            adminSection.childNodes.forEach(node => {
+                if (node.nodeType === Node.TEXT_NODE) {
+                    if (hide) {
+                        if (!node._originalText) node._originalText = node.textContent;
+                        node.textContent = '';
+                    } else {
+                        node.textContent = node._originalText || node.textContent;
+                    }
+                }
+            });
+        });
+    }
 
-document.getElementById('selectAll').addEventListener('change',function(){
-  document.querySelectorAll('.violation-checkbox').forEach(cb=>cb.checked=this.checked);
-  updateSelectedCount();
-});
-document.querySelectorAll('.violation-checkbox').forEach(cb=>cb.addEventListener('change',updateSelectedCount));
-
-function updateSelectedCount(){
-  const n=document.querySelectorAll('.violation-checkbox:checked').length;
-  document.getElementById('selectedCount').textContent=`(${n} selected)`;
-  document.getElementById('deleteSelectedBtn').disabled=n===0;
-}
-
-function deleteSelected(){
-  const selected=document.querySelectorAll('.violation-checkbox:checked');
-  if(selected.length===0) return;
-  if(!confirm(`Delete ${selected.length} violation(s)? This cannot be undone.`)) return;
-  document.getElementById('bulkDeleteForm').submit();
-}
-
-window.onclick=function(e){
-  const im=document.getElementById('imageModal'), dm=document.getElementById('deleteModal');
-  if(e.target===im) closeModal();
-  if(e.target===dm) closeDeleteModal();
-};
-document.addEventListener('keydown',function(e){
-  if(e.key==='Escape'){closeModal();closeDeleteModal()}
-});
-updateSelectedCount();
-
-function showNotification(message, type) {
-    // Create notification element
-    const notification = document.createElement('div');
-    notification.className = `alert alert-${type === 'success' ? 'success' : 'info'} alert-dismissible fade show`;
-    notification.style.position = 'fixed';
-    notification.style.top = '20px';
-    notification.style.right = '20px';
-    notification.style.zIndex = '9999';
-    notification.style.minWidth = '300px';
-    notification.innerHTML = `
-        ${message}
-        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-    `;
-    
-    document.body.appendChild(notification);
-    
-    // Auto-remove after 3 seconds
-    setTimeout(() => {
-        if (notification.parentNode) {
-            notification.parentNode.removeChild(notification);
+    function setFixedElementsWidthAndLeft(width, left) {
+        if (header) {
+            header.style.width = width;
+            header.style.left = left;
         }
-    }, 3000);
-}
+        if (stickyControls) {
+            stickyControls.style.width = width;
+            stickyControls.style.left = left;
+        }
+    }
 
+    function collapseSidebar() {
+        collapsed = true;
+        sidebar.style.width = '60px';
+        mainContainer.style.marginLeft = '60px';
+        mainContainer.style.width = 'calc(100% - 60px)';
+        setFixedElementsWidthAndLeft('calc(100% - 60px)', '60px');
+        setSidebarTextVisibility(true);
+    }
+    function expandSidebar() {
+        collapsed = false;
+        sidebar.style.width = '240px';
+        mainContainer.style.marginLeft = '240px';
+        mainContainer.style.width = 'calc(100% - 240px)';
+        setFixedElementsWidthAndLeft('calc(100% - 240px)', '240px');
+        setSidebarTextVisibility(false);
+    }
 
+    // Initial set for page load
+    setFixedElementsWidthAndLeft('calc(100% - 240px)', '240px');
+
+    sidebar.addEventListener('mouseenter', function() {
+        if (collapsed) {
+            expandSidebar();
+            mainContainer.style.transition = 'margin-left 0.2s, width 0.2s';
+            mainContainer.style.marginLeft = '240px';
+            mainContainer.style.width = 'calc(100% - 240px)';
+            setFixedElementsWidthAndLeft('calc(100% - 240px)', '240px');
+        }
+    });
+    sidebar.addEventListener('mouseleave', function() {
+        if (!collapsed) {
+            collapseSidebar();
+            mainContainer.style.transition = 'margin-left 0.2s, width 0.2s';
+            mainContainer.style.marginLeft = '60px';
+            mainContainer.style.width = 'calc(100% - 60px)';
+            setFixedElementsWidthAndLeft('calc(100% - 60px)', '60px');
+        }
+    });
+});
 </script>
-<!-- Bootstrap JS bundle (includes Popper) – required for dropdowns -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+        <div class="main-container" id="mainContainer" style="margin-left: 240px; width: calc(100% - 240px); transition: margin-left 0.2s, width 0.2s;">
+            <div style="height: 80px;"></div>
+            <div class="header" style="position: fixed; top: 0; left: 240px; right: 0; z-index: 1001; background: #1B3C53; width: calc(100% - 240px); padding-top: 18px; padding-bottom: 12px;">
+                <div style="display: flex; flex-direction: row; align-items: center; justify-content: center; gap: 18px;">
+                    <span style="display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; border-radius: 50%; background: linear-gradient(135deg, #3498db 0%, #764ba2 100%); box-shadow: 0 2px 8px rgba(52,152,219,0.10);">
+                        <i class="fas fa-list" style="font-size: 1.7rem; color: #fff;"></i>
+                    </span>
+                    <span style="font-size: 1.7rem; font-weight: 800; letter-spacing: 1px; color: #fff; text-shadow: 0 2px 8px rgba(52,152,219,0.10);">
+                        SRAS Violation Database
+                    </span>
+                </div>
+                <div style="text-align: center; margin-top: 2px;">
+                    <span style="font-size: 1rem; color: #e0e6ed; font-weight: 500;">View and manage all detected violations</span>
+                </div>
+            </div>
+
+            <div class="content">
+
+                {% if messages %}
+                <div class="messages">
+                    {% for message in messages %}
+                    <div class="message {{ message.tags }}">{{ message }}</div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+
+                <div class="row mb-0 align-items-end" id="sticky-controls" style="gap: 0; position: fixed; top: 80px; z-index: 1000; background: #456882; padding-top: 20px; padding-bottom: 2px; min-height: 48px; width: calc(100% - 240px); left: 240px; margin-left: 0; margin-right: 0; max-width: 100vw;">
+                <div style="height: 30px;"></div>
+                    <div class="col-md-2 col-6 mb-2">
+                        <div class="stats-card position-relative" style="background: #fff; color: #764ba2; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); padding: 10px 12px; border: 2px dashed #764ba2; overflow: hidden;">
+                            <div class="d-flex align-items-center">
+                                <div class="stats-icon me-2" style="width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: #fff;">
+                                    <i class="fas fa-exclamation-triangle"></i>
+                                </div>
+                                <div>
+                                    <div class="mb-0" style="color: #764ba2; font-size: 1.1rem; font-weight: 700;">{{ total_violations }}</div>
+                                    <div class="mb-0" style="color: #764ba2; font-size: 0.95em;">Total</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-2 col-6 mb-2">
+                        <div class="stats-card position-relative" style="background: #fff; color: #11998e; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); padding: 10px 12px; border: 2px dashed #11998e; overflow: hidden;">
+                            <div class="d-flex align-items-center">
+                                <div class="stats-icon me-2" style="width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%); color: #fff;">
+                                    <i class="fas fa-calendar-day"></i>
+                                </div>
+                                <div>
+                                    <div class="mb-0" style="color: #11998e; font-size: 1.1rem; font-weight: 700;">{{ today_violations }}</div>
+                                    <div class="mb-0" style="color: #11998e; font-size: 0.95em;">Today</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-8 col-12 mb-2">
+                        <form method="GET" action="{% url 'violation_list' %}">
+                            <div class="row g-3 align-items-end flex-nowrap">
+                                <div class="col-md-6 col-12">
+                                    <label for="search" class="form-label mb-1 fw-semibold"><i class="fas fa-search me-1"></i> Search</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text bg-light"><i class="fas fa-search"></i></span>
+                                        <input type="text" id="search" name="search" value="{{ search }}" class="form-control" placeholder="Plate number or camera name...">
+                                    </div>
+                                </div>
+                                <div class="col-md-3 col-12">
+                                    <label for="date" class="form-label mb-1 fw-semibold"><i class="fas fa-calendar-alt me-1"></i> Date</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text bg-light"><i class="fas fa-calendar-alt"></i></span>
+                                        <input type="date" id="date" name="date" value="{{ date_filter }}" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="col-md-3 col-12 d-flex align-items-end gap-2">
+                                    <button type="submit" class="btn btn-primary w-100"><i class="fas fa-search"></i> Search</button>
+                                    <a href="{% url 'violation_list' %}" class="btn btn-secondary w-100"><i class="fas fa-sync-alt"></i> Clear</a>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div style="height: 15px;"></div>
+                </div>
+
+
+                {% if page_obj %}
+                <div style="height: 148px;"></div>
+                
+
+                <form id="bulkDeleteForm" method="POST" action="{% url 'delete_multiple_violations' %}">{% csrf_token %}
+                    <div class="violations-table" style="padding: 24px;">
+                        <form id="bulkDeleteForm" method="POST" action="{% url 'delete_multiple_violations' %}">{% csrf_token %}
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <div>
+                                    <input type="checkbox" id="selectAll" class="form-check-input me-2">
+                                    <label for="selectAll" class="form-label mb-0">Select All</label>
+                                    <span id="selectedCount" class="ms-2 text-muted" style="font-size: 0.95em;">(0 selected)</span>
+                                </div>
+                                <button class="btn btn-sm btn-danger" type="button" onclick="deleteSelected()" id="deleteSelectedBtn" disabled>
+                                    <i class="fas fa-trash"></i> Delete Selected
+                                </button>
+                            </div>
+                            <div class="table-responsive" style="padding: 12px;">
+                                <table class="table table-hover align-middle mb-0 recent-violations-table" style="border-radius: 14px; overflow: hidden;">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th style="width: 40px; text-align: center; position: sticky; top: 0; background: #f8f9fa; z-index: 3;">
+                                                <input type="checkbox" id="selectAllTop" class="form-check-input">
+                                            </th>
+                                            <th style="padding: 16px 18px; position: sticky; top: 0; background: #f8f9fa; z-index: 3;">Image</th>
+                                             <th style="padding: 16px 18px; font-size:1.08em; color:#764ba2; font-weight:700; border: none;">
+                                                <i class="fas fa-id-card"></i> Plate
+                                            </th>
+                                            <th style="padding: 16px 18px; font-size:1.08em; color:#3498db; font-weight:700; border: none;">
+                                                <i class="fas fa-video"></i> Camera
+                                            </th>
+                                            <th style="padding: 16px 18px; font-size:1.08em; color:#11998e; font-weight:700; border: none;">
+                                                <i class="fas fa-clock"></i> Time
+                                            </th>
+                                            <th style="padding: 16px 18px; text-align: center; font-size:1.08em; color:#f093fb; font-weight:700; border: none;">
+                                                <i class="fas fa-cogs"></i> Action
+                                        </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for violation in page_obj %}
+                                        <tr style="transition: background 0.2s;">
+                                            <td style="text-align: center;">
+                                                <input type="checkbox" name="violation_ids" value="{{ violation.id }}" class="violation-checkbox form-check-input">
+                                            </td>
+                                            <td style="padding: 12px 16px;">
+                                                <img src="{% url 'violation_image' violation.id %}"
+                                                    alt="Violation Image" class="violation-image"
+                                                    style="width: 60px; height: 40px; object-fit: cover; border-radius: 7px; cursor: pointer; box-shadow: 0 2px 8px rgba(120,72,220,0.08);"
+                                                    data-url="{% url 'violation_image' violation.id %}"
+                                                    data-date="{{ violation.timestamp|date:'M d, Y H:i'|escape }}"
+                                                    onclick="showImage(this.dataset.url, this.dataset.date)">
+                                            </td>
+                                            <td style="padding: 12px 16px;">
+                                                {% if violation.plate_number and violation.plate_number != "UNKNOWN" %}
+                                                    <span style="font-weight: 600; font-size: 1em;">
+                                                        <i class></i> {{ violation.plate_number }}
+                                                    </span>
+                                                {% else %}
+                                                    <span style="font-weight: 600; font-size: 1em;">
+                                                        <i class></i> UNKNOWN
+                                                    </span>
+                                                {% endif %}
+                                                {% if violation.plate_image %}
+                                                    <img src="{% url 'violation_plate_image' violation.id %}"
+                                                        alt="Plate Image" class="plate-thumb"
+                                                        style="width: 80px; height: auto; border-radius: 7px; margin-top: 4px; object-fit: contain; box-shadow: 0 2px 8px rgba(120,72,220,0.10);"
+                                                        data-url="{% url 'violation_plate_image' violation.id %}"
+                                                        data-date="Plate - {{ violation.timestamp|date:'M d, Y H:i'|escape }}"
+                                                        onclick="showImage(this.dataset.url, this.dataset.date)">
+                                                {% endif %}
+                                            </td>
+                                            <td style="padding: 12px 16px;">
+                                                <span style="font-weight: 600; color: #3498db;">
+                                                    <i class></i> {{ violation.camera.name }}
+                                                </span>
+                                            </td>
+                                            <td style="padding: 12px 16px;">
+                                                <span style="font-weight: 500; color: #11998e;">
+                                                    <i class></i> {{ violation.timestamp|date:"M d, Y H:i" }}
+                                                </span>
+                                            </td>
+                                            <td style="padding: 14px 18px; text-align: center; background:rgba(240,147,251,0.04); border: none;">
+                                                <a href="{% url 'violation_detail' violation.id %}"
+                                                class="btn-outline-view"
+                                                style="margin-right: 8px;">
+                                                    <i class="fas fa-eye"></i> <span class="d-none d-sm-inline">View</span>
+                                                </a>
+                                                <button type="button"
+                                                        class="btn-outline-delete"
+                                                        style="margin-left: 8px;"
+                                                        data-id="{{ violation.id }}"
+                                                        data-date="{{ violation.timestamp|date:'M d, Y H:i'|escape }}"
+                                                        onclick="confirmDelete(this.dataset.id, this.dataset.date)">
+                                                    <i class="fas fa-trash"></i> <span class="d-none d-sm-inline">Delete</span>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </form>
+                </form>
+
+                {% else %}
+                <div class="no-violations">
+                    <h3>📭 No Violations Found</h3>
+                    <p>No violations match your search criteria or no violations have been recorded yet.</p>
+                </div>
+                {% endif %}
+
+                {% if page_obj.has_other_pages %}
+                <div class="pagination">
+                    {% if page_obj.has_previous %}
+                    <a href="?page=1{% if search %}&search={{ search }}{% endif %}{% if date_filter %}&date={{ date_filter }}{% endif %}{% if plate_filter %}&plate={{ plate_filter }}{% endif %}">&laquo; First</a>
+                    <a href="?page={{ page_obj.previous_page_number }}{% if search %}&search={{ search }}{% endif %}{% if date_filter %}&date={{ date_filter }}{% endif %}{% if plate_filter %}&plate={{ plate_filter }}{% endif %}">&lsaquo; Previous</a>
+                    {% endif %}
+                    <span class="current">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+                    {% if page_obj.has_next %}
+                    <a href="?page={{ page_obj.next_page_number }}{% if search %}&search={{ search }}{% endif %}{% if date_filter %}&date={{ date_filter }}{% endif %}{% if plate_filter %}&plate={{ plate_filter }}{% endif %}">Next &rsaquo;</a>
+                    <a href="?page={{ page_obj.paginator.num_pages }}{% if search %}&search={{ search }}{% endif %}{% if date_filter %}&date={{ date_filter }}{% endif %}{% if plate_filter %}&plate={{ plate_filter }}{% endif %}">Last &raquo;</a>
+                    {% endif %}
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <!-- Image Modal -->
+    <div id="imageModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h3 id="modalTitle">Violation Image</h3>
+            <div class="image-controls">
+                <button class="zoom-btn" onclick="zoomIn()">🔍+</button>
+                <button class="zoom-btn" onclick="zoomOut()">🔍-</button>
+                <button class="zoom-btn" onclick="resetZoom()">🔄 Reset</button>
+                <button class="zoom-btn" onclick="togglePan()">✋ Pan</button>
+            </div>
+            <div class="image-container">
+                <img id="modalImage" class="modal-image" src="" alt="Violation Image">
+            </div>
+        </div>
+    </div>
+    <!-- Delete Modal -->
+    <div id="deleteModal" class="delete-modal">
+        <div class="delete-modal-content">
+            <h3>🗑️ Confirm Deletion</h3>
+            <p>Are you sure you want to delete violation #<span id="deleteViolationId"></span>?</p>
+            <p><strong>Time:</strong> <span id="deleteViolationTime"></span></p>
+            <p>This action cannot be undone.</p>
+            <div class="delete-modal-buttons">
+                <button class="btn btn-secondary" onclick="closeDeleteModal()">❌ Cancel</button>
+                <button class="btn btn-danger" onclick="deleteViolation()">🗑️ Delete</button>
+            </div>
+        </div>
+    </div>
+    <script>
+    let currentDeleteId=null,currentZoom=1,isPanning=false,panStartX=0,panStartY=0,panOffsetX=0,panOffsetY=0;
+    function showImage(url,title){document.getElementById('modalImage').src=url;document.getElementById('modalTitle').textContent=title;document.getElementById('imageModal').style.display='block';resetZoom()}
+    function closeModal(){document.getElementById('imageModal').style.display='none';resetZoom()}
+    function zoomIn(){currentZoom=Math.min(currentZoom*1.5,5);updateImageTransform()}
+    function zoomOut(){currentZoom=Math.max(currentZoom/1.5,0.5);updateImageTransform()}
+    function resetZoom(){currentZoom=1;panOffsetX=0;panOffsetY=0;updateImageTransform()}
+    function togglePan(){isPanning=!isPanning;const panBtn=document.querySelector('.zoom-btn:last-child');panBtn.textContent=isPanning?'✋ Pan (ON)':'✋ Pan';panBtn.style.backgroundColor=isPanning?'#007bff':'';panBtn.style.color=isPanning?'#fff':''}
+    function updateImageTransform(){const img=document.getElementById('modalImage');img.style.transform=`translate(${panOffsetX}px, ${panOffsetY}px) scale(${currentZoom})`}
+    document.getElementById('modalImage').addEventListener('wheel',e=>{e.preventDefault();e.deltaY<0?zoomIn():zoomOut()});
+    document.getElementById('modalImage').addEventListener('mousedown',function(e){if(isPanning){panStartX=e.clientX-panOffsetX;panStartY=e.clientY-panOffsetY;this.style.cursor='grabbing'}});
+    document.getElementById('modalImage').addEventListener('mousemove',function(e){if(isPanning&&panStartX!==null){panOffsetX=e.clientX-panStartX;panOffsetY=e.clientY-panStartY;updateImageTransform()}});
+    ['mouseup','mouseleave'].forEach(evt=>document.getElementById('modalImage').addEventListener(evt,function(){panStartX=null;panStartY=null;this.style.cursor='grab'}));
+    function confirmDelete(id,t){currentDeleteId=id;document.getElementById('deleteViolationId').textContent=id;document.getElementById('deleteViolationTime').textContent=t;document.getElementById('deleteModal').style.display='block'}
+    function closeDeleteModal(){document.getElementById('deleteModal').style.display='none';currentDeleteId=null}
+    function deleteViolation(){
+      if(currentDeleteId){
+        const f=document.createElement('form');
+        f.method='POST';
+        f.action=`/violations/${currentDeleteId}/delete/`;
+        const csrf=document.querySelector('[name=csrfmiddlewaretoken]').value;
+        const i=document.createElement('input');
+        i.type='hidden'; i.name='csrfmiddlewaretoken'; i.value=csrf;
+        f.appendChild(i);
+        document.body.appendChild(f);
+        f.submit();
+      }
+    }
+    document.getElementById('selectAll').addEventListener('change',function(){
+      document.querySelectorAll('.violation-checkbox').forEach(cb=>cb.checked=this.checked);
+      document.getElementById('selectAllTop').checked = this.checked;
+      updateSelectedCount();
+    });
+    document.getElementById('selectAllTop').addEventListener('change',function(){
+      document.querySelectorAll('.violation-checkbox').forEach(cb=>cb.checked=this.checked);
+      document.getElementById('selectAll').checked = this.checked;
+      updateSelectedCount();
+    });
+    document.querySelectorAll('.violation-checkbox').forEach(cb=>cb.addEventListener('change',function(){
+      const all = document.querySelectorAll('.violation-checkbox');
+      const checked = document.querySelectorAll('.violation-checkbox:checked');
+      document.getElementById('selectAll').checked = all.length === checked.length;
+      document.getElementById('selectAllTop').checked = all.length === checked.length;
+      updateSelectedCount();
+    }));
+    function updateSelectedCount(){
+      const n=document.querySelectorAll('.violation-checkbox:checked').length;
+      document.getElementById('selectedCount').textContent=`(${n} selected)`;
+      document.getElementById('deleteSelectedBtn').disabled=n===0;
+    }
+    function deleteSelected(){
+      const selected=document.querySelectorAll('.violation-checkbox:checked');
+      if(selected.length===0) return;
+      if(!confirm(`Delete ${selected.length} violation(s)? This cannot be undone.`)) return;
+      document.getElementById('bulkDeleteForm').submit();
+    }
+    window.onclick=function(e){
+      const im=document.getElementById('imageModal'), dm=document.getElementById('deleteModal');
+      if(e.target===im) closeModal();
+      if(e.target===dm) closeDeleteModal();
+    };
+    document.addEventListener('keydown',function(e){
+      if(e.key==='Escape'){closeModal();closeDeleteModal()}
+    });
+    updateSelectedCount();
+    function showNotification(message, type) {
+        // Create notification element
+        const notification = document.createElement('div');
+        notification.className = `alert alert-${type === 'success' ? 'success' : 'info'} alert-dismissible fade show`;
+        notification.style.position = 'fixed';
+        notification.style.top = '20px';
+        notification.style.right = '20px';
+        notification.style.zIndex = '9999';
+        notification.style.minWidth = '300px';
+        notification.innerHTML = `
+            ${message}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        `;
+        
+        document.body.appendChild(notification);
+        
+        // Auto-remove after 3 seconds
+        setTimeout(() => {
+            if (notification.parentNode) {
+                notification.parentNode.removeChild(notification);
+            }
+        }, 3000);
+    }
+    </script>
+    <!-- Bootstrap JS bundle (includes Popper) – required for dropdowns -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
 </body>
 </html>

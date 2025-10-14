@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,25 +7,15 @@
     <title>SRAS - Dashboard</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="/static/cozy-dark.css">
-    <script defer src="/static/theme-toggle.js"></script>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: #456882;
             min-height: 100vh;
-            margin: 0;
+            margin-top: 20px;
             padding: 0;
         }
-        .main-container {
-            max-width: 1400px;
-            margin: 0 auto;
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 15px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-            overflow: hidden;
-            margin-top: 20px;
-        }
+        
         .navbar {
             background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%) !important;
             padding: 15px 0;
@@ -53,28 +44,111 @@
         .navbar-toggler:focus {
             box-shadow: none;
         }
-        /* Keep dashboard-specific styles below */
         .stats-card, .recent-violations, .quick-actions {
             background: white;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            border-radius: 18px;
+            box-shadow: 0 8px 32px rgba(44,62,80,0.10);
+        }
+        .recent-violations {
+            opacity: 0;
+            transform: translateY(40px) scale(0.98);
+            animation: recentSlideUp 0.8s cubic-bezier(0.23, 1, 0.32, 1) 0.2s forwards;
+        }
+        @keyframes recentSlideUp {
+            0% {
+                opacity: 0;
+                transform: translateY(40px) scale(0.98);
+            }
+            60% {
+                opacity: 0.7;
+                transform: translateY(-8px) scale(1.02);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+        .quick-actions {
+            opacity: 0;
+            transform: translateX(60px) scale(0.98);
+            animation: quickSlideLeft 0.8s cubic-bezier(0.23, 1, 0.32, 1) 0.4s forwards;
+        }
+        @keyframes quickSlideLeft {
+            0% {
+                opacity: 0;
+                transform: translateX(60px) scale(0.98);
+            }
+            60% {
+                opacity: 0.7;
+                transform: translateX(-8px) scale(1.02);
+            }
+            100% {
+                opacity: 1;
+                transform: translateX(0) scale(1);
+            }
+        }
+        .card.h-100 {
+            opacity: 0;
+            transform: translateX(-60px) scale(0.98);
+            animation: violationSlideRight 0.8s cubic-bezier(0.23, 1, 0.32, 1) 0.3s forwards;
+        }
+        @keyframes violationSlideRight {
+            0% {
+                opacity: 0;
+                transform: translateX(-60px) scale(0.98);
+            }
+            60% {
+                opacity: 0.7;
+                transform: translateX(8px) scale(1.02);
+            }
+            100% {
+                opacity: 1;
+                transform: translateX(0) scale(1);
+            }
         }
         .stats-card {
-            transition: transform 0.3s ease;
-            padding: 20px;
+            padding: 28px 24px;
+            border: 2px solid #eaf6fb;
+            min-height: 140px;
+            opacity: 0;
+            transform: translateY(40px) scale(0.96);
+            animation: cardFadeIn 0.9s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+            transition:
+                box-shadow 0.35s cubic-bezier(0.23, 1, 0.32, 1),
+                transform 0.35s cubic-bezier(0.23, 1, 0.32, 1),
+                background 0.35s cubic-bezier(0.23, 1, 0.32, 1),
+                border-color 0.35s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+        @keyframes cardFadeIn {
+            0% {
+                opacity: 0;
+                transform: translateY(40px) scale(0.96);
+            }
+            60% {
+                opacity: 0.7;
+                transform: translateY(-8px) scale(1.02);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
         }
         .stats-card:hover {
-            transform: translateY(-5px);
+            transform: translateY(-5px) scale(1.03);
+            box-shadow: 0 12px 32px rgba(52,152,219,0.18);
+            background: #f8fafd;
+            border-color: #3498db;
         }
         .stats-icon {
-            width: 60px;
-            height: 60px;
+            width: 64px;
+            height: 64px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.5rem;
+            font-size: 2.1rem;
             color: white;
+            box-shadow: 0 4px 16px rgba(52,152,219,0.12);
         }
         .bg-primary-gradient {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -117,11 +191,42 @@
             font-size: 0.95rem;
         }
         .card-body h2, .stats-card h3 {
-            font-size: 1.8rem;
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: #234C6A;
         }
         .btn-sm {
             min-height: 32px;
             font-size: 14px;
+        }
+        .stat-overview-animate {
+            opacity: 0;
+            transform: translateY(-60px) scale(0.98);
+            animation: statOverviewSlideDown 0.8s cubic-bezier(0.23, 1, 0.32, 1) 0.1s forwards;
+        }
+        @keyframes statOverviewSlideDown {
+            0% {
+                opacity: 0;
+                transform: translateY(-60px) scale(0.98);
+            }
+            60% {
+                opacity: 0.7;
+                transform: translateY(8px) scale(1.02);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+        .recent-violations-table thead th {
+            background: #f8fafd !important;
+            border-bottom: 2px solid #f093fb !important;
+        }
+        .recent-violations-table tbody tr:hover {
+            background: #f3f0fa !important;
+        }
+        .recent-violations-table td, .recent-violations-table th {
+            vertical-align: middle;
         }
         @media (max-width: 768px) {
             .main-container {
@@ -145,57 +250,132 @@
     </style>
 </head>
 <body>
-    <!-- Navigation -->
-    <nav class="navbar navbar-expand-lg">
-        <div class="container">
-            <a class="navbar-brand" href="{% url 'dashboard' %}">
-                <i class="fas fa-shield-alt"></i> SRAS
-            </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav me-auto">
-                    <li class="nav-item">
-                        <a class="nav-link active" href="{% url 'dashboard' %}">
-                            <i class="fas fa-tachometer-alt"></i> Dashboard
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'monitor' %}">
-                            <i class="fas fa-video"></i> Live Monitor
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'violation_list' %}">
-                            <i class="fas fa-list"></i> Violations
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'enforcer_list' %}">
-                            <i class="fas fa-users"></i> Enforcers
-                        </a>
-                    </li>
-                </ul>
-                <ul class="navbar-nav">
-                    <li class="nav-item d-flex align-items-center me-2">
-                        <a href="#" class="btn btn-sm btn-outline-primary" data-theme-toggle>🌙 Dark</a>
-                    </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
-                            <i class="fas fa-user"></i> <span class="d-none d-md-inline">{{ user.username }}</span>
-                        </a>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="{% url 'logout' %}">
-                                <i class="fas fa-sign-out-alt"></i> Logout
-                            </a></li>
-                        </ul>
-                    </li>
-                </ul>
+    <!-- Sidebar Navigation -->
+    <div style="display: flex; min-height: 100vh;">
+        <nav id="sidebar" class="sidebar" style="width: 240px; background: #234C6A; color: #fff; position: fixed; top: 0; left: 0; height: 100vh; z-index: 1100; display: flex; flex-direction: column; box-shadow: 2px 0 10px rgba(0,0,0,0.08); transition: width 0.2s;">
+            <div style="padding: 32px 24px 16px 24px; border-bottom: 1px solid rgba(255,255,255,0.08);">
+                <a class="navbar-brand" href="{% url 'dashboard' %}" style="color: #fff; font-size: 1.7rem; font-weight: 700; text-decoration: none;">
+                    <i class="fas fa-shield-alt"></i> SRAS
+                </a>
             </div>
-        </div>
-    </nav>
-    <div class="main-container">
+            <ul class="nav flex-column mt-4" style="flex: 1;">
+                <li class="nav-item mb-2">
+                    <a class="nav-link active" href="{% url 'dashboard' %}" style="color: #fff; font-weight: 500;">
+                        <i class="fas fa-tachometer-alt me-2"></i> Dashboard
+                    </a>
+                </li>
+                <li class="nav-item mb-2">
+                    <a class="nav-link" href="{% url 'monitor' %}" style="color: #fff;">
+                        <i class="fas fa-video me-2"></i> Live Monitor
+                    </a>
+                </li>
+                <li class="nav-item mb-2">
+                    <a class="nav-link" href="{% url 'violation_list' %}" style="color: #fff;">
+                        <i class="fas fa-list me-2"></i> Violations
+                    </a>
+                </li>
+                <li class="nav-item mb-2">
+                    <a class="nav-link" href="{% url 'enforcer_list' %}" style="color: #fff;">
+                        <i class="fas fa-users me-2"></i> Enforcers
+                    </a>
+                </li>
+            </ul>
+            <div style="padding: 16px 24px; border-top: 1px solid rgba(255,255,255,0.08);">
+                <div class="dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="sidebarDropdown" role="button" data-bs-toggle="dropdown" style="color: #fff;">
+                        <i class="fas fa-user"></i> <span class="d-none d-md-inline">{{ user.username }}</span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="{% url 'logout' %}">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </a></li>
+                    </ul>
+                </div>
+            </div>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const sidebar = document.getElementById('sidebar');
+    const mainContainer = document.querySelector('.main-container');
+    let collapsed = false;
+
+    function setSidebarTextVisibility(hide) {
+        console.log('[Sidebar] setSidebarTextVisibility called, hide:', hide);
+        sidebar.querySelectorAll('.nav-link, .navbar-brand, .dropdown-toggle').forEach(el => {
+            el.childNodes.forEach(node => {
+                if (node.nodeType === Node.TEXT_NODE) {
+                    if (hide) {
+                        if (!node._originalText) node._originalText = node.textContent;
+                        node.textContent = '';
+                    } else {
+                        node.textContent = node._originalText || node.textContent;
+                    }
+                } else if (node.nodeType === Node.ELEMENT_NODE && node.tagName !== 'I') {
+                    if (hide) {
+                        if (!node.dataset.originalDisplay) node.dataset.originalDisplay = node.style.display;
+                        node.style.display = 'none';
+                    } else {
+                        node.style.display = node.dataset.originalDisplay || '';
+                    }
+                }
+            });
+        });
+        sidebar.querySelectorAll('.dropdown, .sidebar-admin').forEach(adminSection => {
+            adminSection.querySelectorAll('*').forEach(child => {
+                if (child.tagName !== 'I') {
+                    if (hide) {
+                        if (!child.dataset.originalDisplay) child.dataset.originalDisplay = child.style.display;
+                        child.style.display = 'none';
+                    } else {
+                        child.style.display = child.dataset.originalDisplay || '';
+                    }
+                }
+            });
+            adminSection.childNodes.forEach(node => {
+                if (node.nodeType === Node.TEXT_NODE) {
+                    if (hide) {
+                        if (!node._originalText) node._originalText = node.textContent;
+                        node.textContent = '';
+                    } else {
+                        node.textContent = node._originalText || node.textContent;
+                    }
+                }
+            });
+        });
+    }
+
+    function collapseSidebar() {
+        collapsed = true;
+        sidebar.style.width = '60px';
+        mainContainer.style.marginLeft = '60px';
+        mainContainer.style.width = 'calc(100% - 60px)';
+        setSidebarTextVisibility(true);
+        console.log('[Sidebar] Collapsed');
+    }
+    function expandSidebar() {
+        collapsed = false;
+        sidebar.style.width = '240px';
+        mainContainer.style.marginLeft = '240px';
+        mainContainer.style.width = 'calc(100% - 240px)';
+        setSidebarTextVisibility(false);
+        console.log('[Sidebar] Expanded');
+    }
+
+    sidebar.addEventListener('mouseenter', function() {
+        if (collapsed) {
+            console.log('[Sidebar] Mouse enter, expanding');
+            expandSidebar();
+        }
+    });
+    sidebar.addEventListener('mouseleave', function() {
+        if (!collapsed) {
+            console.log('[Sidebar] Mouse leave, collapsing');
+            collapseSidebar();
+        }
+    });
+});
+</script>
+        </nav>
+        <div class="main-container" style="margin-left: 240px; width: calc(100% - 240px); padding-left: 32px; padding-right: 32px;">
         {% if messages %}
             {% for message in messages %}
                 <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
@@ -206,177 +386,240 @@
             {% endfor %}
         {% endif %}
 
-        <!-- Welcome Section -->
-        <div class="row mb-4">
-            <div class="col-12">
-                <div class="card bg-primary-gradient text-white">
-                    <div class="card-body">
-                        <h2><i class="fas fa-sun"></i> Welcome back, {{ user.username }}!</h2>
-                        <p class="mb-0">Here's what's happening with your Safe Road Alert System today.</p>
-                    </div>
+        <!-- Welcome Popup (fades out) -->
+        {% if show_welcome_popup %}
+        <div id="welcomePopup" class="position-fixed top-0 start-50 translate-middle-x" style="z-index: 2000; margin-top: 32px; min-width: 320px; max-width: 90vw;">
+            <div class="alert alert-primary d-flex align-items-center shadow-lg" style="font-size: 1.1rem; border-radius: 12px; padding: 18px 28px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: #fff; border: none;">
+                <i class="fas fa-sun me-3" style="font-size: 1.7rem;"></i>
+                <div>
+                    <strong>Welcome back, {{ user.username }}!</strong>
+                    <div style="font-size: 1rem; opacity: 0.95;">Here's what's happening with your Safe Road Alert System today.</div>
                 </div>
             </div>
         </div>
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                setTimeout(function() {
+                    const popup = document.getElementById('welcomePopup');
+                    if (popup) {
+                        popup.style.transition = 'opacity 1s';
+                        popup.style.opacity = '0';
+                        setTimeout(() => popup.remove(), 1200);
+                    }
+                }, 2200);
+            });
+        </script>
+        {% endif %}
 
         <!-- Statistics Cards -->
-        <div class="row mb-4">
-            <div class="col-lg-3 col-md-6 col-6 mb-3">
-                <div class="stats-card">
-                    <div class="d-flex align-items-center">
-                        <div class="stats-icon bg-primary-gradient me-3">
-                            <i class="fas fa-exclamation-triangle"></i>
-                        </div>
-                        <div>
-                            <h3 class="mb-0">{{ total_violations }}</h3>
-                            <p class="text-muted mb-0">Total Violations</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-6 col-6 mb-3">
-                <div class="stats-card">
-                    <div class="d-flex align-items-center">
-                        <div class="stats-icon bg-success-gradient me-3">
-                            <i class="fas fa-calendar-day"></i>
-                        </div>
-                        <div>
-                            <h3 class="mb-0">{{ today_violations }}</h3>
-                            <p class="text-muted mb-0">Today's Violations</p>
+        <div class="row mb-4 stat-overview-animate">
+            <div class="col-12" style="border: 2px dashed #764ba2; border-radius: 18px; padding: 15px 20px; background: #fff;">
+                <h4 class="mb-4" style="font-weight: bold; color: #764ba2; font-size: 20px;">
+                    <i class="fas fa-chart-pie me-2"></i> Statistics Overview
+                </h4>
+                <div class="row g-4">
+                    <div class="col-xl-3 col-lg-4 col-md-6 col-12">
+                        <div class="stats-card">
+                            <div class="d-flex align-items-center">
+                                <div class="stats-icon bg-primary-gradient me-3">
+                                    <i class="fas fa-exclamation-triangle"></i>
+                                </div>
+                                <div>
+                                    <h3 class="mb-0">{{ total_violations }}</h3>
+                                    <p class="text-muted mb-0">Total Violations</p>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-6 col-6 mb-3">
-                <div class="stats-card">
-                    <div class="d-flex align-items-center">
-                        <div class="stats-icon bg-warning-gradient me-3">
-                            <i class="fas fa-calendar-week"></i>
-                        </div>
-                        <div>
-                            <h3 class="mb-0">{{ this_week_violations }}</h3>
-                            <p class="text-muted mb-0">This Week</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-6 col-6 mb-3">
-                <div class="stats-card">
-                    <div class="d-flex align-items-center">
-                        <div class="stats-icon bg-info-gradient me-3">
-                            <i class="fas fa-calendar-alt"></i>
-                        </div>
-                        <div>
-                            <h3 class="mb-0">{{ this_month_violations }}</h3>
-                            <p class="text-muted mb-0">This Month</p>
+                    <div class="col-xl-3 col-lg-4 col-md-6 col-12">
+                        <div class="stats-card">
+                            <div class="d-flex align-items-center">
+                                <div class="stats-icon bg-success-gradient me-3">
+                                    <i class="fas fa-calendar-day"></i>
+                                </div>
+                                <div>
+                                    <h3 class="mb-0">{{ today_violations }}</h3>
+                                    <p class="text-muted mb-0">Today's Violations</p>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-6 col-6 mb-3">
-                <div class="stats-card">
-                    <div class="d-flex align-items-center">
-                        <div class="stats-icon bg-secondary-gradient me-3">
-                            <i class="fas fa-users"></i>
-                        </div>
-                        <div>
-                            <h3 class="mb-0">{{ total_enforcers }}</h3>
-                            <p class="text-muted mb-0">Total Enforcers</p>
+                    <div class="col-xl-3 col-lg-4 col-md-6 col-12">
+                        <div class="stats-card">
+                            <div class="d-flex align-items-center">
+                                <div class="stats-icon bg-secondary-gradient me-3">
+                                    <i class="fas fa-users"></i>
+                                </div>
+                                <div>
+                                    <h3 class="mb-0">{{ total_enforcers }}</h3>
+                                    <p class="text-muted mb-0">Total Enforcers</p>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-6 col-6 mb-3">
-                <div class="stats-card">
-                    <div class="d-flex align-items-center">
-                        <div class="stats-icon bg-success-gradient me-3">
-                            <i class="fas fa-user-check"></i>
-                        </div>
-                        <div>
-                            <h3 class="mb-0">{{ active_enforcers }}</h3>
-                            <p class="text-muted mb-0">Active Enforcers</p>
+                    <div class="col-xl-3 col-lg-4 col-md-6 col-12">
+                        <div class="stats-card">
+                            <div class="d-flex align-items-center">
+                                <div class="stats-icon bg-success-gradient me-3">
+                                    <i class="fas fa-user-check"></i>
+                                </div>
+                                <div>
+                                    <h3 class="mb-0">{{ active_enforcers }}</h3>
+                                    <p class="text-muted mb-0">Active Enforcers</p>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="row">
-            <!-- Quick Actions -->
-            <div class="col-lg-4 col-md-12 mb-4">
-                <div class="quick-actions p-3">
-                    <h5 class="mb-3"><i class="fas fa-bolt"></i> Quick Actions</h5>
-                    <div class="row">
-                        <div class="col-6 mb-3">
-                            <a href="{% url 'monitor' %}" class="text-decoration-none">
-                                <div class="action-card bg-primary text-white">
-                                    <div class="action-icon">
-                                        <i class="fas fa-video"></i>
-                                    </div>
-                                    <h6>Live Monitor</h6>
-                                </div>
-                            </a>
+        <div class="row mb-4" style="display: flex; flex-wrap: wrap; gap: 0;">
+            <div class="col-12 col-md-8 d-flex flex-column" style="margin-bottom: 0; position: relative; z-index: 1;">
+                <div class="card h-100" style="border: 2px dashed #3498db; border-radius: 10px; padding: 10px 20px; background: #fff;">
+                    <div class="card-body" style="padding: 0;">
+                        <h4 class="mb-3" style="font-weight: bold; color: #3498db; font-size: 20px;">
+                            <i class="fas fa-chart-bar"></i>Violation Statistics (Last 5 Days)
+                        </h4>
+                        <div class="chart-container" style="position: relative; height: 180px; margin: 10px 0;">
+                            <canvas id="violationChart"></canvas>
                         </div>
-                        <div class="col-6 mb-3">
-                            <a href="{% url 'violation_list' %}" class="text-decoration-none">
-                                <div class="action-card bg-success text-white">
-                                    <div class="action-icon">
-                                        <i class="fas fa-list"></i>
-                                    </div>
-                                    <h6>View Violations</h6>
-                                </div>
-                            </a>
-                        </div>
-                        <div class="col-6 mb-3">
-                            <a href="{% url 'add_enforcer' %}" class="text-decoration-none">
-                                <div class="action-card bg-warning text-white">
-                                    <div class="action-icon">
-                                        <i class="fas fa-user-plus"></i>
-                                    </div>
-                                    <h6>Add Enforcer</h6>
-                                </div>
-                            </a>
-                        </div>
-                        <div class="col-6 mb-3">
-                            <a href="{% url 'logout' %}" class="text-decoration-none">
-                                <div class="action-card bg-danger text-white">
-                                    <div class="action-icon">
-                                        <i class="fas fa-sign-out-alt"></i>
-                                    </div>
-                                    <h6>Logout</h6>
-                                </div>
-                            </a>
+                        <div class="stats-summary" id="statsSummary">
+                            <div class="loading-stats">
+                                <div class="spinner"></div>
+                                <span>Loading statistics...</span>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
+            <div class="col-12 col-md-4 d-flex flex-column" style="margin-bottom: 0;">
+                <!-- Radial Bar Chart for Violations Overview -->
+                <div class="p-3 h-100 quick-actions" style="border: 2px dashed #11998e; border-radius: 10px; padding: 16px 20px; background: #fff; position: relative; z-index: 2;">
+                    <h5 class="mb-3" style="font-weight: bold; color: #11998e;">
+                        <i class="fas fa-chart-pie"></i> Weekly/Monthly Violations Overview
+                    </h5>
+                    <div style="display: flex; justify-content: center; align-items: center; height: 320px;">
+                        <canvas id="radialBarChartOverview" width="280" height="280"></canvas>
+                    </div>
+                    <div class="mt-3" style="text-align: center;">
+                        <span style="font-weight: bold; color: #f7971e;">This Week:</span> {{ this_week_violations }} &nbsp;|&nbsp;
+                        <span style="font-weight: bold; color: #3498db;">This Month:</span> {{ this_month_violations }}
+                    </div>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const chartCard = document.querySelector('.quick-actions');
+        if (chartCard) {
+            chartCard.style.opacity = '0';
+            chartCard.style.transform = 'translateX(60px) scale(0.98)';
+            chartCard.style.animation = 'quickSlideLeft 0.8s cubic-bezier(0.23, 1, 0.32, 1) 0.4s forwards';
+        }
+        const ctx = document.getElementById('radialBarChartOverview').getContext('2d');
+        const week = Number('{{ this_week_violations|default:"0" }}');
+        const month = Number('{{ this_month_violations|default:"0" }}');
+        console.log('[Chart] Bar Chart Data:', { week, month });
 
-            <!-- Recent Violations -->
-            <div class="col-lg-8 col-md-12 mb-4">
-                <div class="recent-violations p-3">
-                    <h5 class="mb-3">
+        // Use a vertical bar chart for better quality and clarity
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['This Week', 'This Month'],
+                datasets: [{
+                    label: 'Violations',
+                    data: [week, month],
+                    backgroundColor: [
+                        '#f7971e',
+                        '#3498db'
+                    ],
+                    borderRadius: 12,
+                    maxBarThickness: 40
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        enabled: true,
+                        callbacks: {
+                            label: function(context) {
+                                console.log('[Chart] Tooltip label callback:', context);
+                                return `${context.label}: ${context.parsed.y}`;
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        grid: { color: 'rgba(0,0,0,0.08)' },
+                        ticks: { color: '#234C6A', font: { weight: 'bold', size: 14 } }
+                    },
+                    y: {
+                        beginAtZero: true,
+                        grid: { color: 'rgba(0,0,0,0.08)' },
+                        ticks: { color: '#234C6A', font: { weight: 'bold', size: 14 }, stepSize: 1 }
+                    }
+                }
+            }
+        });
+        console.log('[Chart] Weekly/Monthly Violations Overview chart rendered');
+    });
+</script>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="recent-violations p-3" style="border: 2px dashed #f093fb; border-radius: 10px; padding: 24px 32px;">
+                    <h5 class="mb-3" style="font-weight: bold; color: #f093fb;">
                         <i class="fas fa-clock"></i> Recent Violations
                         <a href="{% url 'violation_list' %}" class="btn btn-sm btn-outline-primary float-end">
                             <span class="d-none d-sm-inline">View All</span><span class="d-sm-none">All</span>
                         </a>
                     </h5>
                     {% if recent_violations %}
-                        {% for violation in recent_violations %}
-                            <div class="violation-item">
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <div>
-                                        <strong>Plate: {{ violation.plate_number|default:"Unknown" }}</strong>
-                                        <br>
-                                        <small class="text-muted">
-                                            <i class="fas fa-camera"></i> {{ violation.camera.name|default:"Unknown Camera" }}
-                                            <i class="fas fa-clock ms-2"></i> {{ violation.timestamp|date:"M d, Y H:i" }}
-                                        </small>
-                                    </div>
-                                    <a href="{% url 'violation_detail' violation.id %}" class="btn btn-sm btn-outline-primary">
-                                        <i class="fas fa-eye"></i> <span class="d-none d-sm-inline">View</span>
-                                    </a>
-                                </div>
-                            </div>
-                        {% endfor %}
+                        <div class="table-responsive" style="padding: 12px;">
+                            <table class="table table-hover align-middle mb-0 recent-violations-table" style="border-radius: 14px; overflow: hidden;">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th style="padding: 16px 18px; font-size:1.08em; color:#764ba2; font-weight:700; border: none;">
+                                            <i class="fas fa-id-card"></i> Plate
+                                        </th>
+                                        <th style="padding: 16px 18px; font-size:1.08em; color:#3498db; font-weight:700; border: none;">
+                                            <i class="fas fa-video"></i> Camera
+                                        </th>
+                                        <th style="padding: 16px 18px; font-size:1.08em; color:#11998e; font-weight:700; border: none;">
+                                            <i class="fas fa-clock"></i> Time
+                                        </th>
+                                        <th style="padding: 16px 18px; text-align: center; font-size:1.08em; color:#f093fb; font-weight:700; border: none;">
+                                            <i class="fas fa-cogs"></i> Action
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for violation in recent_violations %}
+                                    <tr style="transition: background 0.2s;">
+                                        <td style="padding: 14px 18px; font-weight:600; color:#234C6A; background:rgba(118,75,162,0.04); border: none;">
+                                            {{ violation.plate_number|default:"Unknown" }}
+                                        </td>
+                                        <td style="padding: 14px 18px; color:#3498db; background:rgba(52,152,219,0.04); border: none;">
+                                            {{ violation.camera.name|default:"Unknown Camera" }}
+                                        </td>
+                                        <td style="padding: 14px 18px; color:#11998e; background:rgba(17,153,142,0.04); border: none;">
+                                            {{ violation.timestamp|date:"M d, Y H:i" }}
+                                        </td>
+                                        <td style="padding: 14px 18px; text-align: center; background:rgba(240,147,251,0.04); border: none;">
+                                            <a href="{% url 'violation_detail' violation.id %}" class="btn btn-sm btn-outline-primary" style="border-radius:18px; font-weight:600;">
+                                                <i class="fas fa-eye"></i> <span class="d-none d-sm-inline">View</span>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
                     {% else %}
                         <div class="text-center py-4">
                             <i class="fas fa-check-circle text-success" style="font-size: 3rem;"></i>
@@ -386,8 +629,146 @@
                 </div>
             </div>
         </div>
-    </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script>
+            let violationChart = null;
+
+            async function loadStatistics() {
+                try {
+                    const response = await fetch('/api/statistics/');
+                    const data = await response.json();
+
+                    if (data.statistics) {
+                        createChart(data.statistics);
+                        updateSummary(data.statistics, data.total_violations);
+                    }
+                } catch (error) {
+                    console.error('Error loading statistics:', error);
+                    document.getElementById('statsSummary').innerHTML = `
+                        <div class="loading-stats">
+                            <span>Error loading statistics</span>
+                        </div>
+                    `;
+                }
+            }
+
+            function createChart(statistics) {
+                const ctx = document.getElementById('violationChart').getContext('2d');
+
+                const labels = statistics.map(stat => stat.display_date);
+                const data = statistics.map(stat => stat.count);
+
+                // Destroy existing chart if it exists
+                if (violationChart) {
+                    violationChart.destroy();
+                }
+
+                violationChart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: 'Violations Detected',
+                            data: data,
+                            fill: true,
+                            backgroundColor: 'rgba(52, 152, 219, 0.15)',
+                            borderColor: 'rgba(52, 152, 219, 1)',
+                            borderWidth: 2,
+                            tension: 0.4,
+                            pointRadius: 2,
+                            pointBackgroundColor: 'rgba(52, 152, 219, 1)',
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: false
+                            },
+                            tooltip: {
+                                backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                                titleColor: 'white',
+                                bodyColor: 'white',
+                                borderColor: '#3498db',
+                                borderWidth: 1,
+                                cornerRadius: 5,
+                                displayColors: false,
+                                callbacks: {
+                                    label: function(context) {
+                                        return `Violations: ${context.parsed.y}`;
+                                    }
+                                }
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                grid: {
+                                    color: 'rgba(0, 0, 0, 0.1)'
+                                },
+                                ticks: {
+                                    stepSize: 1,
+                                    color: '#6c757d'
+                                }
+                            },
+                            x: {
+                                grid: {
+                                    display: false
+                                },
+                                ticks: {
+                                    color: '#6c757d',
+                                    font: {
+                                        weight: 'bold'
+                                    }
+                                }
+                            }
+                        },
+                        animation: {
+                            duration: 1000,
+                            easing: 'easeInOutQuart'
+                        }
+                    }
+                });
+            }
+
+            function updateSummary(statistics, totalViolations) {
+                const today = statistics[statistics.length - 1];
+                const yesterday = statistics[statistics.length - 2];
+                console.log('Stats Summary Data:', { statistics, totalViolations, today, yesterday });
+
+                // 2x2 grid: Today | 5-Day Total, Yesterday | Daily Average
+                document.getElementById('statsSummary').innerHTML = `
+                    <div class="stats-summary-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px 32px;">
+                        <div class="stat-card" style="text-align:left;">
+                            <h6>Today</h6>
+                            <div class="stat-value" style="font-weight:bold; font-size:1.3rem;">${today.count}</div>
+                        </div>
+                        <div class="stat-card" style="text-align:right;">
+                            <h6>5-Day Total</h6>
+                            <div class="stat-value" style="font-weight:bold; font-size:1.3rem;">${totalViolations}</div>
+                        </div>
+                        <div class="stat-card" style="text-align:left;">
+                            <h6>Yesterday</h6>
+                            <div class="stat-value" style="font-weight:bold; font-size:1.3rem;">${yesterday.count}</div>
+                        </div>
+                        <div class="stat-card" style="text-align:right;">
+                            <h6>Daily Average</h6>
+                            <div class="stat-value" style="font-weight:bold; font-size:1.3rem;">${Math.round(totalViolations / 5)}</div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            document.addEventListener('DOMContentLoaded', function() {
+                loadStatistics();
+                setInterval(loadStatistics, 300000);
+            });
+        </script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    </div>
+<!-- Add Enforcer Modal (copied from enforcer_list.html) -->
+<!-- Add Enforcer Modal removed as requested -->
 </body>
-</html> 
+</html>

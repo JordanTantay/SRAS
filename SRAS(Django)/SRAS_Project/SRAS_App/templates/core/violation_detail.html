@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,8 +7,6 @@
     <title>SRAS - Violation Detail</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="/static/cozy-dark.css">
-    <script defer src="/static/theme-toggle.js"></script>
     <style>
         * {
             margin: 0;
@@ -17,82 +16,20 @@
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: #456882;
             min-height: 100vh;
-            margin: 0;
             padding: 0;
         }
 
-        .main-container {
-            max-width: 1000px;
-            margin: 0 auto;
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 15px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-            overflow: hidden;
-            margin-top: 20px;
-        }
-
-        .navbar {
-            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
-            padding: 15px 0;
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        }
-
-        .navbar-brand {
-            font-weight: 600;
-            font-size: 1.5rem;
-            color: white !important;
-        }
-
-        .nav-link {
-            color: rgba(255, 255, 255, 0.8) !important;
-            transition: color 0.3s ease;
-            font-weight: 500;
-        }
-
-        .nav-link:hover, .nav-link.active {
-            color: white !important;
-        }
-
-        .navbar-toggler {
-            border: none;
-            color: white;
-        }
-
-        .navbar-toggler:focus {
-            box-shadow: none;
-        }
-
-        .dropdown-menu {
-            background: white;
-            border: none;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
-        }
-
-        .dropdown-item {
-            color: #2c3e50;
-            transition: all 0.3s ease;
-        }
-
-        .dropdown-item:hover {
-            background: #f8f9fa;
-            color: #667eea;
-        }
-
         .header {
-            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
-            color: white;
-            padding: 20px;
+            background: #1B3C53;
+            padding: 8px 0 8px 0;
             text-align: center;
         }
 
         .header h1 {
             font-size: 2.5em;
+            color: #fff;
             margin-bottom: 10px;
             font-weight: 300;
         }
@@ -108,97 +45,162 @@
 
         .nav-links {
             display: flex;
-            gap: 15px;
-            margin-bottom: 20px;
+            gap: 24px;
+            margin-bottom: 32px;
+            justify-content: center;
         }
 
         .btn {
-            padding: 10px 20px;
+            padding: 14px 32px;
             border: none;
-            border-radius: 5px;
+            border-radius: 32px;
             cursor: pointer;
-            font-size: 14px;
+            font-size: 1.1em;
             text-decoration: none;
-            display: inline-block;
-            transition: all 0.3s ease;
+            display: flex-end;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
+            box-shadow: 0 2px 8px rgba(44,62,80,0.08);
+            transition: background 0.2s, color 0.2s, box-shadow 0.2s, transform 0.2s;
         }
 
         .btn-primary {
-            background: #3498db;
-            color: white;
+            background: linear-gradient(90deg, #3498db 60%, #2980b9 100%);
+            color: #fff;
+            box-shadow: 0 4px 16px rgba(52,152,219,0.12);
         }
 
         .btn-primary:hover {
-            background: #2980b9;
+            background: linear-gradient(90deg, #2980b9 60%, #3498db 100%);
+            color: #fff;
+            transform: translateY(-2px) scale(1.04);
+            box-shadow: 0 6px 24px rgba(52,152,219,0.18);
         }
 
         .btn-secondary {
-            background: #95a5a6;
-            color: white;
+            background: linear-gradient(90deg, #95a5a6 60%, #7f8c8d 100%);
+            color: #fff;
+            box-shadow: 0 4px 16px rgba(149,165,166,0.12);
         }
 
         .btn-secondary:hover {
-            background: #7f8c8d;
+            background: linear-gradient(90deg, #7f8c8d 60%, #95a5a6 100%);
+            color: #fff;
+            transform: translateY(-2px) scale(1.04);
+            box-shadow: 0 6px 24px rgba(149,165,166,0.18);
         }
 
         .btn-danger {
-            background: #e74c3c;
-            color: white;
+            background: linear-gradient(90deg, #e74c3c 60%, #c0392b 100%);
+            color: #fff;
+            box-shadow: 0 2px 8px rgba(231,76,60,0.10);
+            padding: 8px 18px;
+            border-radius: 24px;
+            font-size: 0.98em;
+            font-weight: 600;
+            transition: background 0.2s, color 0.2s, box-shadow 0.2s, transform 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
         }
 
         .btn-danger:hover {
-            background: #c0392b;
+            background: linear-gradient(90deg, #c0392b 60%, #e74c3c 100%);
+            color: #fff;
+            transform: translateY(-1px) scale(1.05);
+            box-shadow: 0 4px 16px rgba(231,76,60,0.18);
         }
 
         .violation-detail {
+            max-width: 1100px;
+            margin: 0 auto 32px auto;
+            background: linear-gradient(120deg, #eaf6fb 60%, #f8f9fa 100%);
+            border-radius: 24px;
+            box-shadow: 0 12px 40px rgba(44,62,80,0.12);
+            border: 1.5px solid #dbeaf3;
+            padding: 40px 32px;
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 30px;
-            margin-bottom: 20px;
+            grid-template-columns: 1.2fr 1fr;
+            gap: 48px;
+            align-items: start;
         }
 
         .image-section {
-            background: white;
-            border-radius: 10px;
-            padding: 20px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            background: none;
+            border-radius: 0;
+            padding: 0;
+            box-shadow: none;
+            border: none;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
         }
 
         .violation-image {
             width: 100%;
+            max-width: 800px;
+            min-height: 400px;
             height: auto;
-            border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            border-radius: 18px;
+            box-shadow: 0 12px 40px rgba(44,62,80,0.22);
+            transition: transform 0.2s, box-shadow 0.2s;
+            border: 3px solid #3498db;
+            object-fit: cover;
+            background: #eaf6fb;
+        }
+        .violation-image:hover {
+            transform: scale(1.04);
+            box-shadow: 0 18px 64px rgba(52,152,219,0.28);
+            border-color: #2980b9;
         }
 
         .info-section {
-            background: white;
-            border-radius: 10px;
-            padding: 20px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            background: none;
+            border-radius: 0;
+            padding: 0;
+            box-shadow: none;
+            border: none;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
         }
 
         .info-grid {
             display: grid;
-            gap: 15px;
+            gap: 18px;
         }
 
         .info-item {
             display: flex;
-            justify-content: space-between;
+            justify-content: flex-start;
             align-items: center;
-            padding: 10px;
-            background: #f8f9fa;
-            border-radius: 5px;
+            gap: 18px;
+            padding: 12px 0;
+            border-bottom: 1px solid #e3e8ee;
+        }
+        .info-item:last-child {
+            border-bottom: none;
         }
 
         .info-label {
-            font-weight: bold;
-            color: #2c3e50;
+            font-weight: 600;
+            color: #2980b9;
+            font-size: 1.08em;
+            min-width: 140px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
 
         .info-value {
-            color: #6c757d;
+            color: #234C6A;
+            font-size: 1.08em;
+            font-weight: 500;
+            word-break: break-word;
         }
 
         .hash-display {
@@ -213,8 +215,12 @@
 
         .action-buttons {
             display: flex;
+            justify-content: flex-end;
+            align-items: flex-end;
             gap: 10px;
-            margin-top: 20px;
+            margin-top: 40px;
+            margin-bottom: 0;
+            min-height: 48px;
         }
 
         .delete-modal {
@@ -255,23 +261,15 @@
                 margin: 10px;
                 border-radius: 10px;
             }
-            
-            .navbar {
-                padding: 10px 0;
-            }
-            
             .header h1 {
                 font-size: 2em;
             }
-            
             .violation-detail {
                 grid-template-columns: 1fr;
             }
-            
             .action-buttons {
                 flex-direction: column;
             }
-            
             .nav-links {
                 flex-direction: column;
                 gap: 10px;
@@ -280,127 +278,215 @@
     </style>
 </head>
 <body>
-    <!-- Navigation -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <div class="container">
-            <a class="navbar-brand" href="{% url 'dashboard' %}">
-                <i class="fas fa-shield-alt"></i> SRAS
-            </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav me-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'dashboard' %}">
-                            <i class="fas fa-tachometer-alt"></i> Dashboard
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'monitor' %}">
-                            <i class="fas fa-video"></i> Live Monitor
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link active" href="{% url 'violation_list' %}">
-                            <i class="fas fa-list"></i> Violations
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'enforcer_list' %}">
-                            <i class="fas fa-users"></i> Enforcers
-                        </a>
-                    </li>
-                </ul>
-                <ul class="navbar-nav">
-                    <li class="nav-item d-flex align-items-center me-2">
-                        <a href="#" class="btn btn-sm btn-outline-primary" data-theme-toggle>🌙 Dark</a>
-                    </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
-                            <i class="fas fa-user"></i> <span class="d-none d-md-inline">{{ user.username }}</span>
-                        </a>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="{% url 'logout' %}">
-                                <i class="fas fa-sign-out-alt"></i> Logout
-                            </a></li>
-                        </ul>
-                    </li>
-                </ul>
+    <!-- Sidebar Navigation -->
+    <div style="display: flex; min-height: 100vh;">
+        <nav id="sidebar" class="sidebar" style="width: 240px; background: #234C6A; color: #fff; position: fixed; top: 0; left: 0; height: 100vh; z-index: 1100; display: flex; flex-direction: column; box-shadow: 2px 0 10px rgba(0,0,0,0.08); transition: width 0.2s;">
+            <div style="padding: 32px 24px 16px 24px; border-bottom: 1px solid rgba(255,255,255,0.08);">
+                <a class="navbar-brand" href="{% url 'dashboard' %}" style="color: #fff; font-size: 1.7rem; font-weight: 700; text-decoration: none;">
+                    <i class="fas fa-shield-alt"></i> SRAS
+                </a>
             </div>
-        </div>
-    </nav>
-
-    <div class="main-container">
-        <div class="header">
-            <h1>📋 Violation Details</h1>
-            <p>Detailed information about violation #{{ violation.id }}</p>
-        </div>
-        
-        <div class="content">
-            <div class="nav-links">
-                <a href="{% url 'monitor' %}" class="btn btn-primary">🔴 Live Monitor</a>
-                <a href="{% url 'violation_list' %}" class="btn btn-secondary">📋 Back to List</a>
-            </div>
-
-            <div class="violation-detail">
-                <div class="image-section">
-                    <h3>📸 Violation Image</h3>
-                    <img src="{% url 'violation_image' violation.id %}" 
-                         alt="Violation Image" 
-                         class="violation-image">
+            <ul class="nav flex-column mt-4" style="flex: 1;">
+                <li class="nav-item mb-2">
+                    <a class="nav-link" href="{% url 'dashboard' %}" style="color: #fff; font-weight: 500;">
+                        <i class="fas fa-tachometer-alt me-2"></i> Dashboard
+                    </a>
+                </li>
+                <li class="nav-item mb-2">
+                    <a class="nav-link" href="{% url 'monitor' %}" style="color: #fff;">
+                        <i class="fas fa-video me-2"></i> Live Monitor
+                    </a>
+                </li>
+                <li class="nav-item mb-2">
+                    <a class="nav-link active" href="{% url 'violation_list' %}" style="color: #fff;">
+                        <i class="fas fa-list me-2"></i> Violations
+                    </a>
+                </li>
+                <li class="nav-item mb-2">
+                    <a class="nav-link" href="{% url 'enforcer_list' %}" style="color: #fff;">
+                        <i class="fas fa-users me-2"></i> Enforcers
+                    </a>
+                </li>
+            </ul>
+            <div style="padding: 16px 24px; border-top: 1px solid rgba(255,255,255,0.08);">
+                <div class="dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="sidebarDropdown" role="button" data-bs-toggle="dropdown" style="color: #fff;">
+                        <i class="fas fa-user"></i> <span class="d-none d-md-inline">{{ user.username }}</span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="{% url 'logout' %}">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </a></li>
+                    </ul>
                 </div>
+            </div>
+        </nav>
+        <!-- Collapsible Sidebar Logic -->
+        <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const sidebar = document.getElementById('sidebar');
+            const mainContainer = document.querySelector('.main-container');
+            const header = document.querySelector('.header');
+            let collapsed = false;
 
-                <div class="info-section">
-                    <h3>📊 Violation Information</h3>
-                    <div class="info-grid">
-                        
-                        
-                        <div class="info-item">
-                            <span class="info-label">Date & Time:</span>
-                            <span class="info-value">{{ violation.timestamp|date:"F d, Y" }} at {{ violation.timestamp|time:"H:i:s" }}</span>
-                        </div>
-                        
-                        <div class="info-item">
-                            <span class="info-label">Plate Number:</span>
-                            <span class="info-value">{{ violation.plate_number|default:"UNKNOWN" }}</span>
-                        </div>
-                        
-                        <div class="info-item">
-                            <span class="info-label">Camera:</span>
-                            <span class="info-value">{{ violation.camera.name }}</span>
-                        </div>
-                        
-                        <div class="info-item">
-                            <span class="info-label">Camera URL:</span>
-                            <span class="info-value">{{ violation.camera.stream_url }}</span>
-                        </div>
-                        
-                        <div class="info-item">
-                            <span class="info-label">Verified By:</span>
-                            <span class="info-value">{{ violation.verified_by }}</span>
-                        </div>
-                        
-                        
+            // Ensure transitions are set for all relevant elements
+            [mainContainer, header, sidebar].forEach(el => {
+                if (el) el.style.transition = 'margin-left 0.2s, width 0.2s, left 0.2s';
+            });
 
-                        <div class="info-item">
-                            <span class="info-label">Rider Hash:</span>
-                            <span class="info-value">{{ violation.rider_hash|default:"N/A" }}</span>
-                        </div>
+            function setSidebarTextVisibility(hide) {
+                sidebar.querySelectorAll('.nav-link, .navbar-brand, .dropdown-toggle').forEach(el => {
+                    el.childNodes.forEach(node => {
+                        if (node.nodeType === Node.TEXT_NODE) {
+                            if (hide) {
+                                if (!node._originalText) node._originalText = node.textContent;
+                                node.textContent = '';
+                            } else {
+                                node.textContent = node._originalText || node.textContent;
+                            }
+                        } else if (node.nodeType === Node.ELEMENT_NODE && node.tagName !== 'I') {
+                            if (hide) {
+                                if (!node.dataset.originalDisplay) node.dataset.originalDisplay = node.style.display;
+                                node.style.display = 'none';
+                            } else {
+                                node.style.display = node.dataset.originalDisplay || '';
+                            }
+                        }
+                    });
+                });
+                sidebar.querySelectorAll('.dropdown, .sidebar-admin').forEach(adminSection => {
+                    adminSection.querySelectorAll('*').forEach(child => {
+                        if (child.tagName !== 'I') {
+                            if (hide) {
+                                if (!child.dataset.originalDisplay) child.dataset.originalDisplay = child.style.display;
+                                child.style.display = 'none';
+                            } else {
+                                child.style.display = child.dataset.originalDisplay || '';
+                            }
+                        }
+                    });
+                    adminSection.childNodes.forEach(node => {
+                        if (node.nodeType === Node.TEXT_NODE) {
+                            if (hide) {
+                                if (!node._originalText) node._originalText = node.textContent;
+                                node.textContent = '';
+                            } else {
+                                node.textContent = node._originalText || node.textContent;
+                            }
+                        }
+                    });
+                });
+            }
+
+            function setHeaderWidthAndLeft(width, left) {
+                if (header) {
+                    header.style.width = width;
+                    header.style.left = left;
+                }
+            }
+
+            function collapseSidebar() {
+                collapsed = true;
+                sidebar.style.width = '60px';
+                mainContainer.style.marginLeft = '60px';
+                mainContainer.style.width = 'calc(100% - 60px)';
+                setHeaderWidthAndLeft('calc(100% - 60px)', '60px');
+                setSidebarTextVisibility(true);
+            }
+            function expandSidebar() {
+                collapsed = false;
+                sidebar.style.width = '240px';
+                mainContainer.style.marginLeft = '240px';
+                mainContainer.style.width = 'calc(100% - 240px)';
+                setHeaderWidthAndLeft('calc(100% - 240px)', '240px');
+                setSidebarTextVisibility(false);
+            }
+
+            // Initial set for page load
+            setHeaderWidthAndLeft('calc(100% - 240px)', '240px');
+
+            sidebar.addEventListener('mouseenter', function() {
+                if (collapsed) {
+                    expandSidebar();
+                }
+            });
+            sidebar.addEventListener('mouseleave', function() {
+                if (!collapsed) {
+                    collapseSidebar();
+                }
+            });
+        });
+        </script>
+        <div class="main-container" style="margin-left: 240px; width: calc(100% - 240px); transition: margin-left 0.2s, width 0.2s;">
+            <div style="height: 110px;"></div>
+            <div class="header" style="position: fixed; top: 0; left: 240px; right: 0; z-index: 1001; background: #1B3C53; width: calc(100% - 240px); display: flex; flex-direction: column; align-items: center; justify-content: center;">
+                <div style="display: flex; align-items: center; gap: 18px; justify-content: center;">
+                    <i class="fas fa-file-alt" style="font-size: 2.6em; color: #3498db;"></i>
+                    <span style="font-size: 2.2em; font-weight: 700; color: #fff; letter-spacing: 1px;">Violation Details</span>
+                </div>
+                <span style="color: #eaf6fb; font-size: 1.15em; font-weight: 400; margin-top: 6px; text-align: center; width: 100%;">
+                    Detailed information about violation #{{ violation.id }}
+                </span>
+            </div>
+            <div class="content">
+                <div class="nav-links">
+                    <a href="{% url 'monitor' %}" class="btn btn-primary">
+                        <i class="fas fa-video"></i> Live Monitor
+                    </a>
+                    <a href="{% url 'violation_list' %}" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left"></i> Back to List
+                    </a>
+                </div>
+                <div class="violation-detail">
+                    <div class="image-section">
+                        <h3 style="font-size:1.3em; color:#2980b9; font-weight:700; margin-bottom:18px;">
+                            <i class="fas fa-camera"></i> Violation Image
+                        </h3>
+                        <img src="{% url 'violation_image' violation.id %}"
+                             alt="Violation Image"
+                             class="violation-image">
                     </div>
-
-                    
-
-                    <div class="action-buttons">
-                        <button class="btn btn-danger" onclick="confirmDelete()">
-                            🗑️ Delete Violation
-                        </button>
+                    <div class="info-section">
+                        <h3 style="font-size:1.3em; color:#234C6A; font-weight:700; margin-bottom:18px;">
+                            <i class="fas fa-info-circle"></i> Violation Information
+                        </h3>
+                        <div class="info-grid">
+                            <div class="info-item">
+                                <span class="info-label"><i class="fas fa-calendar-alt"></i> Date & Time:</span>
+                                <span class="info-value">{{ violation.timestamp|date:"F d, Y" }} at {{ violation.timestamp|time:"H:i:s" }}</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label"><i class="fas fa-car"></i> Plate Number:</span>
+                                <span class="info-value">{{ violation.plate_number|default:"UNKNOWN" }}</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label"><i class="fas fa-video"></i> Camera:</span>
+                                <span class="info-value">{{ violation.camera.name }}</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label"><i class="fas fa-link"></i> Camera URL:</span>
+                                <span class="info-value">{{ violation.camera.stream_url }}</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label"><i class="fas fa-user-check"></i> Verified By:</span>
+                                <span class="info-value">{{ violation.verified_by }}</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label"><i class="fas fa-fingerprint"></i> Rider Hash:</span>
+                                <span class="info-value">{{ violation.rider_hash|default:"N/A" }}</span>
+                            </div>
+                        </div>
+                        <div class="action-buttons">
+                            <button class="btn btn-danger" onclick="confirmDelete()">
+                                <i class="fas fa-trash-alt"></i>
+                                <span style="font-size:0.98em;">Delete</span>
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-
     <!-- Delete Confirmation Modal -->
     <div id="deleteModal" class="delete-modal">
         <div class="delete-modal-content">
@@ -415,31 +501,25 @@
             </div>
         </div>
     </div>
-
     <script>
         function confirmDelete() {
             document.getElementById('deleteModal').style.display = 'block';
         }
-
         function closeDeleteModal() {
             document.getElementById('deleteModal').style.display = 'none';
         }
-
         function deleteViolation() {
             const form = document.createElement('form');
             form.method = 'POST';
             form.action = '{% url "delete_violation" violation.id %}';
-            
             const csrfToken = document.createElement('input');
             csrfToken.type = 'hidden';
             csrfToken.name = 'csrfmiddlewaretoken';
             csrfToken.value = '{{ csrf_token }}';
             form.appendChild(csrfToken);
-            
             document.body.appendChild(form);
             form.submit();
         }
-
         // Close modal when clicking outside
         window.onclick = function(event) {
             const deleteModal = document.getElementById('deleteModal');
@@ -447,7 +527,6 @@
                 closeDeleteModal();
             }
         }
-
         // Close modal with Escape key
         document.addEventListener('keydown', function(event) {
             if (event.key === 'Escape') {
@@ -457,4 +536,4 @@
     </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
-</html> 
+</html>

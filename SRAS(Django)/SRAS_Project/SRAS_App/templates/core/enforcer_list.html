@@ -6,71 +6,29 @@
     <title>SRAS - Enforcers</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="/static/cozy-dark.css">
-    <script defer src="/static/theme-toggle.js"></script>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: #456882;
             min-height: 100vh;
             margin: 0;
             padding: 0;
         }
-        .main-container {
-            max-width: 1400px;
-            margin: 0 auto;
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 15px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-            overflow: hidden;
-            margin-top: 20px;
-        }
-        .navbar {
-            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%) !important;
-            padding: 15px 0;
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        }
-        .navbar-brand {
-            font-weight: 600;
-            font-size: 1.5rem;
-            color: white !important;
-        }
-        .nav-link {
-            color: rgba(255, 255, 255, 0.8) !important;
-            transition: color 0.3s ease;
-            font-weight: 500;
-        }
-        .nav-link:hover, .nav-link.active {
-            color: white !important;
-        }
-        .navbar-toggler {
-            border: none;
-            color: white;
-        }
-        .navbar-toggler:focus {
-            box-shadow: none;
-        }
-        /* Keep enforcer-specific styles below */
+        /* ... rest of styles unchanged ... */
         .enforcer-card {
             background: white;
             border-radius: 10px;
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
             transition: transform 0.3s ease;
             margin-bottom: 20px;
+
+            
         }
         .enforcer-card:hover {
             transform: translateY(-2px);
             box-shadow: 0 5px 15px rgba(0,0,0,0.2);
         }
-        .enforcer-header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 20px;
-            border-radius: 10px 10px 0 0;
-        }
+        
         .enforcer-body {
             padding: 20px;
         }
@@ -100,16 +58,14 @@
             margin-bottom: 20px;
             font-size: 0.95rem;
         }
-        .page-header {
-            background: white;
-            border-radius: 10px;
-            padding: 20px;
-            margin-bottom: 20px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        .header{
+            background: #1B3C53;
+            color:#fff;
+            padding:20px;
+            text-align:center
         }
-        .page-header h2 {
-            font-size: 1.8rem;
-        }
+        .header h1{font-size:2.5em;margin-bottom:10px;font-weight:300}
+        .header p{opacity:.9;font-size:1.1em}
         .btn-primary {
             min-height: 44px;
             font-size: 16px;
@@ -121,9 +77,7 @@
             .enforcer-card, .page-header {
                 padding: 12px;
             }
-            .enforcer-header {
-                padding: 15px;
-            }
+            
             .enforcer-body {
                 padding: 15px;
             }
@@ -134,142 +88,262 @@
     </style>
 </head>
 <body>
-    <!-- Navigation -->
-    <nav class="navbar navbar-expand-lg">
-        <div class="container">
-            <a class="navbar-brand" href="{% url 'dashboard' %}">
-                <i class="fas fa-shield-alt"></i> SRAS
-            </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav me-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'dashboard' %}">
-                            <i class="fas fa-tachometer-alt"></i> Dashboard
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'monitor' %}">
-                            <i class="fas fa-video"></i> Live Monitor
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'violation_list' %}">
-                            <i class="fas fa-list"></i> Violations
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link active" href="{% url 'enforcer_list' %}">
-                            <i class="fas fa-users"></i> Enforcers
-                        </a>
-                    </li>
-                </ul>
-                <ul class="navbar-nav">
-                    <li class="nav-item d-flex align-items-center me-2">
-                        <a href="#" class="btn btn-sm btn-outline-primary" data-theme-toggle>🌙 Dark</a>
-                    </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
-                            <i class="fas fa-user"></i> <span class="d-none d-md-inline">{{ user.username }}</span>
-                        </a>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="{% url 'logout' %}">
-                                <i class="fas fa-sign-out-alt"></i> Logout
-                            </a></li>
-                        </ul>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
-    <div class="main-container">
-        {% if messages %}
-            {% for message in messages %}
-                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
-                    <i class="fas fa-{% if message.tags == 'error' %}exclamation-triangle{% else %}check-circle{% endif %}"></i>
-                    {{ message }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                </div>
-            {% endfor %}
-        {% endif %}
-
-        <div class="page-header">
-            <div class="d-flex justify-content-between align-items-center">
-                <div>
-                    <h2><i class="fas fa-users"></i> Enforcers</h2>
-                    <p class="text-muted mb-0">Manage system enforcers and their assignments</p>
-                </div>
-                <a href="{% url 'add_enforcer' %}" class="btn btn-primary">
-                    <i class="fas fa-user-plus"></i> <span class="d-none d-md-inline">Add Enforcer</span><span class="d-md-none">Add</span>
+    <!-- Sidebar Navigation -->
+    <div style="display: flex; min-height: 100vh;">
+        <nav id="sidebar" style="width: 240px; background: #234C6A; color: #fff; position: fixed; top: 0; left: 0; height: 100vh; z-index: 1100; display: flex; flex-direction: column; box-shadow: 2px 0 10px rgba(0,0,0,0.08); transition: width 0.2s;">
+            <div style="padding: 32px 24px 16px 24px; border-bottom: 1px solid rgba(255,255,255,0.08);">
+                <a class="navbar-brand" href="{% url 'dashboard' %}" style="color: #fff; font-size: 1.7rem; font-weight: 700; text-decoration: none;">
+                    <i class="fas fa-shield-alt"></i> SRAS
                 </a>
             </div>
-        </div>
+            <ul class="nav flex-column mt-4" style="flex: 1;">
+                <li class="nav-item mb-2">
+                    <a class="nav-link" href="{% url 'dashboard' %}" style="color: #fff; font-weight: 500;">
+                        <i class="fas fa-tachometer-alt me-2"></i> Dashboard
+                    </a>
+                </li>
+                <li class="nav-item mb-2">
+                    <a class="nav-link" href="{% url 'monitor' %}" style="color: #fff;">
+                        <i class="fas fa-video me-2"></i> Live Monitor
+                    </a>
+                </li>
+                <li class="nav-item mb-2">
+                    <a class="nav-link" href="{% url 'violation_list' %}" style="color: #fff;">
+                        <i class="fas fa-list me-2"></i> Violations
+                    </a>
+                </li>
+                <li class="nav-item mb-2">
+                    <a class="nav-link active" href="{% url 'enforcer_list' %}" style="color: #fff;">
+                        <i class="fas fa-users me-2"></i> Enforcers
+                    </a>
+                </li>
+            </ul>
+            <div style="padding: 16px 24px; border-top: 1px solid rgba(255,255,255,0.08);">
+                <div class="dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="sidebarDropdown" role="button" data-bs-toggle="dropdown" style="color: #fff;">
+                        <i class="fas fa-user"></i> <span class="d-none d-md-inline">{{ user.username }}</span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="{% url 'logout' %}">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        <!-- Collapsible Sidebar Logic -->
+        <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const sidebar = document.getElementById('sidebar');
+            const mainContainer = document.getElementById('mainContainer');
+            const header = document.querySelector('.header');
+            let collapsed = false;
 
-        {% if enforcers %}
-            <div class="row">
-                {% for enforcer in enforcers %}
-                    <div class="col-lg-6 col-md-12">
-                        <div class="enforcer-card">
-                            <div class="enforcer-header">
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <div>
-                                        <h4 class="mb-1">
-                                            <i class="fas fa-user"></i> {{ enforcer.user.username }}
-                                        </h4>
-                                        <p class="mb-0 opacity-75">{{ enforcer.user.email }}</p>
-                                    </div>
-                                    <span class="status-badge {% if enforcer.user.is_active %}status-active{% else %}status-inactive{% endif %}">
-                                        {% if enforcer.user.is_active %}
-                                            <i class="fas fa-check-circle"></i> <span class="d-none d-sm-inline">Active</span>
-                                        {% else %}
-                                            <i class="fas fa-times-circle"></i> <span class="d-none d-sm-inline">Inactive</span>
-                                        {% endif %}
-                                    </span>
-                                </div>
-                            </div>
-                            <div class="enforcer-body">
-                                <div class="row">
-                                    <div class="col-md-6 col-12">
-                                        <p><strong><i class="fas fa-phone"></i> Mobile:</strong><br>
-                                        {{ enforcer.mobile_number }}</p>
-                                    </div>
-                                    <div class="col-md-6 col-12">
-                                        <p><strong><i class="fas fa-camera"></i> Assigned Camera:</strong><br>
+            // Add smooth transition to all relevant elements
+            [mainContainer, header].forEach(el => {
+                if (el) el.style.transition = 'margin-left 0.2s, width 0.2s, left 0.2s';
+            });
+
+            function setSidebarTextVisibility(hide) {
+                sidebar.querySelectorAll('.nav-link, .navbar-brand, .dropdown-toggle').forEach(el => {
+                    el.childNodes.forEach(node => {
+                        if (node.nodeType === Node.TEXT_NODE) {
+                            if (hide) {
+                                if (!node._originalText) node._originalText = node.textContent;
+                                node.textContent = '';
+                            } else {
+                                node.textContent = node._originalText || node.textContent;
+                            }
+                        } else if (node.nodeType === Node.ELEMENT_NODE && node.tagName !== 'I') {
+                            if (hide) {
+                                if (!node.dataset.originalDisplay) node.dataset.originalDisplay = node.style.display;
+                                node.style.display = 'none';
+                            } else {
+                                node.style.display = node.dataset.originalDisplay || '';
+                            }
+                        }
+                    });
+                });
+                sidebar.querySelectorAll('.dropdown, .sidebar-admin').forEach(adminSection => {
+                    adminSection.querySelectorAll('*').forEach(child => {
+                        if (child.tagName !== 'I') {
+                            if (hide) {
+                                if (!child.dataset.originalDisplay) child.dataset.originalDisplay = child.style.display;
+                                child.style.display = 'none';
+                            } else {
+                                child.style.display = child.dataset.originalDisplay || '';
+                            }
+                        }
+                    });
+                    adminSection.childNodes.forEach(node => {
+                        if (node.nodeType === Node.TEXT_NODE) {
+                            if (hide) {
+                                if (!node._originalText) node._originalText = node.textContent;
+                                node.textContent = '';
+                            } else {
+                                node.textContent = node._originalText || node.textContent;
+                            }
+                        }
+                    });
+                });
+            }
+
+            function setHeaderWidthAndLeft(width, left) {
+                if (header) {
+                    header.style.width = width;
+                    header.style.left = left;
+                }
+            }
+            function collapseSidebar() {
+                collapsed = true;
+                sidebar.style.width = '60px';
+                mainContainer.style.marginLeft = '60px';
+                mainContainer.style.width = 'calc(100% - 60px)';
+                setHeaderWidthAndLeft('calc(100% - 60px)', '60px');
+                setSidebarTextVisibility(true);
+            }
+            function expandSidebar() {
+                collapsed = false;
+                sidebar.style.width = '240px';
+                mainContainer.style.marginLeft = '240px';
+                mainContainer.style.width = 'calc(100% - 240px)';
+                setHeaderWidthAndLeft('calc(100% - 240px)', '240px');
+                setSidebarTextVisibility(false);
+            }
+
+            // Initial set for page load
+            setHeaderWidthAndLeft('calc(100% - 240px)', '240px');
+
+            sidebar.addEventListener('mouseenter', function() {
+                if (collapsed) {
+                    expandSidebar();
+                    mainContainer.style.transition = 'margin-left 0.2s, width 0.2s';
+                    mainContainer.style.marginLeft = '240px';
+                    mainContainer.style.width = 'calc(100% - 240px)';
+                    setHeaderWidthAndLeft('calc(100% - 240px)', '240px');
+                }
+            });
+            sidebar.addEventListener('mouseleave', function() {
+                if (!collapsed) {
+                    collapseSidebar();
+                    mainContainer.style.transition = 'margin-left 0.2s, width 0.2s';
+                    mainContainer.style.marginLeft = '60px';
+                    mainContainer.style.width = 'calc(100% - 60px)';
+                    setHeaderWidthAndLeft('calc(100% - 60px)', '60px');
+                }
+            });
+        });
+        </script>
+        <div class="main-container" id="mainContainer" style="margin-left: 240px; width: calc(100% - 240px); transition: margin-left 0.2s, width 0.2s;">
+            <div style="height: 135px;"></div>
+            <div class="header" style="position: fixed; top: 0; left: 240px; right: 0; z-index: 1001; background: #1B3C53; width: calc(100% - 240px); padding-top: 18px; padding-bottom: 12px;">
+                <div style="display: flex; flex-direction: row; align-items: center; justify-content: center; gap: 18px;">
+                    <span style="display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; border-radius: 50%; background: linear-gradient(135deg, #3498db 0%, #764ba2 100%); box-shadow: 0 2px 8px rgba(52,152,219,0.10);">
+                        <i class="fas fa-users" style="font-size: 1.7rem; color: #fff;"></i>
+                    </span>
+                    <span style="font-size: 1.7rem; font-weight: 800; letter-spacing: 1px; color: #fff; text-shadow: 0 2px 8px rgba(52,152,219,0.10);">
+                        Enforcers
+                    </span>
+                </div>
+                <div style="text-align: center; margin-top: 2px;">
+                    <span style="font-size: 1rem; color: #e0e6ed; font-weight: 500;">Manage system enforcers and their assignments</span>
+                </div>
+            </div>
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                <!-- Page Header -->
+                <div style="width:100%; background:#456882; color:#fff; padding: 22px 0 18px 0; text-align:center; font-size:2rem; font-weight:700; letter-spacing:1px; box-shadow:0 2px 8px rgba(69,104,130,0.08); margin-bottom: 24px;">
+                    <i class="fas fa-users" style="margin-right:12px;"></i>
+                    Enforcer Management
+                </div>
+                        <i class="fas fa-{% if message.tags == 'error' %}exclamation-triangle{% else %}check-circle{% endif %}"></i>
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+
+            <div class="card mb-4 shadow-sm" style="border-radius: 10px; border: 2px dashed #764ba2; margin: 20px;">
+                <div class="card-body py-3 px-4">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        
+                        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addEnforcerModal">
+                            <i class="fas fa-user-plus"></i> <span class="d-none d-md-inline">Add Enforcer</span><span class="d-md-none">Add</span>
+                        </button>
+                    </div>
+                    {% if enforcers %}
+                    <div class="table-responsive">
+                        <table class="table table-striped table-bordered align-middle mb-0" style="border-radius: 8px; overflow: hidden;">
+                            <thead class="table-light">
+                                <tr>
+                                    <th style="padding: 14px 16px;">Username</th>
+                                    <th style="padding: 14px 16px;">Email</th>
+                                    <th style="padding: 14px 16px;">Mobile</th>
+                                    <th style="padding: 14px 16px;">Assigned Camera</th>
+                                    <th style="padding: 14px 16px;">Status</th>
+                                    <th style="padding: 14px 16px; text-align: center;">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for enforcer in enforcers %}
+                                <tr>
+                                    <td style="padding: 12px 16px;">
+                                        <i class="fas fa-user me-1"></i> {{ enforcer.user.username }}
+                                    </td>
+                                    <td style="padding: 12px 16px;">{{ enforcer.user.email }}</td>
+                                    <td style="padding: 12px 16px;">{{ enforcer.mobile_number }}</td>
+                                    <td style="padding: 12px 16px;">
                                         {% if enforcer.assigned_camera %}
                                             {{ enforcer.assigned_camera.name }}
                                         {% else %}
                                             <span class="text-muted">No camera assigned</span>
-                                        {% endif %}</p>
-                                    </div>
-                                </div>
-                                
-                                <div class="d-flex justify-content-end mt-3">
-                                    <a href="{% url 'edit_enforcer' enforcer.id %}" class="btn btn-warning btn-action">
-                                        <i class="fas fa-edit"></i> <span class="d-none d-sm-inline">Edit</span>
-                                    </a>
-                                    <button class="btn btn-danger btn-action" onclick="confirmDelete({{ enforcer.id }}, '{{ enforcer.user.username }}')">
-                                        <i class="fas fa-trash"></i> <span class="d-none d-sm-inline">Delete</span>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
+                                        {% endif %}
+                                    </td>
+                                    <td style="padding: 12px 16px;">
+                                        <span class="status-badge {% if enforcer.user.is_active %}status-active{% else %}status-inactive{% endif %}">
+                                            {% if enforcer.user.is_active %}
+                                                <i class="fas fa-check-circle"></i> <span class="d-none d-sm-inline">Active</span>
+                                            {% else %}
+                                                <i class="fas fa-times-circle"></i> <span class="d-none d-sm-inline">Inactive</span>
+                                            {% endif %}
+                                        </span>
+                                    </td>
+                                    <td style="padding: 12px 16px; text-align: center;">
+<!-- DEBUG: Edit button for enforcer. Now triggers edit modal. -->
+<button class="btn btn-sm btn-outline-warning me-2"
+        data-bs-toggle="modal"
+        data-bs-target="#editEnforcerModal"
+        data-enforcer-id="{{ enforcer.id }}"
+        data-enforcer-email="{{ enforcer.user.email }}"
+        data-enforcer-mobile="{{ enforcer.mobile_number }}"
+        data-enforcer-camera="{% if enforcer.assigned_camera %}{{ enforcer.assigned_camera.id }}{% endif %}"
+        data-enforcer-active="{% if enforcer.user.is_active %}true{% else %}false{% endif %}">
+    <i class="fas fa-edit"></i> <span class="d-none d-sm-inline">Edit</span>
+</button>
+                                        <button class="btn btn-sm btn-outline-danger" onclick="confirmDelete('{{ enforcer.id }}', '{{ enforcer.user.username|escapejs }}')">
+                                            <i class="fas fa-trash"></i> <span class="d-none d-sm-inline">Delete</span>
+                                        </button>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
                     </div>
-                {% endfor %}
+                    {% else %}
+                    <div class="text-center py-5">
+                        <i class="fas fa-users" style="font-size: 4rem; color: #6c757d;"></i>
+                        <h3 class="mt-3">No Enforcers Found</h3>
+                        <p class="text-muted">No enforcers have been registered yet.</p>
+                        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addEnforcerModal">
+                            <i class="fas fa-user-plus"></i> Add First Enforcer
+                        </button>
+                    </div>
+                    {% endif %}
+                </div>
             </div>
-        {% else %}
-            <div class="text-center py-5">
-                <i class="fas fa-users" style="font-size: 4rem; color: #6c757d;"></i>
-                <h3 class="mt-3">No Enforcers Found</h3>
-                <p class="text-muted">No enforcers have been registered yet.</p>
-                <a href="{% url 'add_enforcer' %}" class="btn btn-primary">
-                    <i class="fas fa-user-plus"></i> Add First Enforcer
-                </a>
-            </div>
-        {% endif %}
+        </div>
     </div>
-
     <!-- Delete Confirmation Modal -->
     <div class="modal fade" id="deleteModal" tabindex="-1">
         <div class="modal-dialog">
@@ -298,7 +372,127 @@
             </div>
         </div>
     </div>
-
+    <!-- Add Enforcer Modal -->
+    <div class="modal fade" id="addEnforcerModal" tabindex="-1" aria-labelledby="addEnforcerModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <form method="post" action="{% url 'add_enforcer' %}">
+                    {% csrf_token %}
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="addEnforcerModalLabel"><i class="fas fa-user-plus"></i> Add New Enforcer</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-md-6 col-12 mb-3">
+                                <label for="username" class="form-label required-field">Username</label>
+                                <input type="text" class="form-control" id="username" name="username" required>
+                                <small class="text-muted">Unique username for login</small>
+                            </div>
+                            <div class="col-md-6 col-12 mb-3">
+                                <label for="email" class="form-label required-field">Email</label>
+                                <input type="email" class="form-control" id="email" name="email" required>
+                                <small class="text-muted">Valid email address</small>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 col-12 mb-3">
+                                <label for="password" class="form-label required-field">Password</label>
+                                <input type="password" class="form-control" id="password" name="password" required>
+                                <small class="text-muted">Minimum 8 characters recommended</small>
+                            </div>
+                            <div class="col-md-6 col-12 mb-3">
+                                <label for="mobile_number" class="form-label required-field">Mobile Number</label>
+                                <input type="tel" class="form-control" id="mobile_number" name="mobile_number" required>
+                                <small class="text-muted">Contact number for notifications</small>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="assigned_camera" class="form-label">Assigned Camera</label>
+                            <select class="form-control form-select" id="assigned_camera" name="assigned_camera">
+                                <option value="">No camera assigned</option>
+                                {% for camera in cameras %}
+                                    <option value="{{ camera.id }}">{{ camera.name }} - {{ camera.stream_url }}</option>
+                                {% endfor %}
+                            </select>
+                            <small class="text-muted">Optional: Assign to a specific camera</small>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                            <i class="fas fa-times"></i> Cancel
+                        </button>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-user-plus"></i> Create Enforcer
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!-- Edit Enforcer Modal -->
+    <div class="modal fade" id="editEnforcerModal" tabindex="-1" aria-labelledby="editEnforcerModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <form method="post" id="editEnforcerForm">
+                    {% csrf_token %}
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="editEnforcerModalLabel"><i class="fas fa-user-edit"></i> Edit Enforcer</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <input type="hidden" name="enforcer_id" id="editEnforcerId">
+                        <div class="row">
+                            <div class="col-md-6 col-12 mb-3">
+                                <label class="form-label">Username</label>
+                                <div class="username-display" id="editEnforcerUsername"></div>
+                                <small class="text-muted">Username cannot be changed</small>
+                            </div>
+                            <div class="col-md-6 col-12 mb-3">
+                                <label for="editEnforcerEmail" class="form-label required-field">Email</label>
+                                <input type="email" class="form-control" id="editEnforcerEmail" name="email" required>
+                                <small class="text-muted">Valid email address</small>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 col-12 mb-3">
+                                <label for="editEnforcerMobile" class="form-label required-field">Mobile Number</label>
+                                <input type="tel" class="form-control" id="editEnforcerMobile" name="mobile_number" required>
+                                <small class="text-muted">Contact number for notifications</small>
+                            </div>
+                            <div class="col-md-6 col-12 mb-3">
+                                <label for="editEnforcerCamera" class="form-label">Assigned Camera</label>
+                                <select class="form-control form-select" id="editEnforcerCamera" name="assigned_camera">
+                                    <option value="">No camera assigned</option>
+                                    {% for camera in cameras %}
+                                        <option value="{{ camera.id }}">{{ camera.name }} - {{ camera.stream_url }}</option>
+                                    {% endfor %}
+                                </select>
+                                <small class="text-muted">Optional: Assign to a specific camera</small>
+                            </div>
+                        </div>
+                        <div class="form-group mb-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="editEnforcerActive" name="is_active">
+                                <label class="form-check-label" for="editEnforcerActive">
+                                    <strong>Active Account</strong>
+                                </label>
+                                <small class="text-muted d-block">Enable or disable this enforcer's access to the system</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                            <i class="fas fa-times"></i> Cancel
+                        </button>
+                        <button type="submit" class="btn btn-warning">
+                            <i class="fas fa-save"></i> Update Enforcer
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         function confirmDelete(enforcerId, enforcerName) {
@@ -308,6 +502,28 @@
             const deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'));
             deleteModal.show();
         }
+
+        // Edit Enforcer Modal population
+        var editModal = document.getElementById('editEnforcerModal');
+        editModal.addEventListener('show.bs.modal', function (event) {
+            var button = event.relatedTarget;
+            var enforcerId = button.getAttribute('data-enforcer-id');
+            var enforcerEmail = button.getAttribute('data-enforcer-email');
+            var enforcerMobile = button.getAttribute('data-enforcer-mobile');
+            var enforcerCamera = button.getAttribute('data-enforcer-camera');
+            var enforcerActive = button.getAttribute('data-enforcer-active');
+            var usernameCell = button.closest('tr').querySelector('td');
+
+            document.getElementById('editEnforcerId').value = enforcerId;
+            document.getElementById('editEnforcerEmail').value = enforcerEmail;
+            document.getElementById('editEnforcerMobile').value = enforcerMobile;
+            document.getElementById('editEnforcerCamera').value = enforcerCamera || "";
+            document.getElementById('editEnforcerActive').checked = (enforcerActive === "true");
+            document.getElementById('editEnforcerUsername').textContent = usernameCell ? usernameCell.textContent.trim() : "";
+            
+            // Set form action to the correct edit URL
+            document.getElementById('editEnforcerForm').action = "/enforcers/" + enforcerId + "/edit/";
+        });
     </script>
 </body>
-</html> 
+</html>
