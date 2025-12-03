@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:startDestination="@id/violatorRecordsFragment">
+
+    <fragment
+        android:id="@+id/cameraFragment"
+        android:name="com.example.sras.fragments.CameraFragment"
+        android:label="Camera" />
+
+    <fragment
+        android:id="@+id/violatorRecordsFragment"
+        android:name="com.example.sras.fragments.ViolatorRecordsFragment"
+        android:label="Violator Records" />
+
+
+</navigation>

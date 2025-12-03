@@ -68,7 +68,7 @@ class OriginalViolation(models.Model):
     This model stores violations that have been verified and approved by users.
     """
     camera = models.ForeignKey(Camera, on_delete=models.CASCADE)
-    timestamp = models.DateTimeField(auto_now_add=True)
+    timestamp = models.DateTimeField()  # Changed from auto_now_add to preserve original timestamp
 
     # parsed from your detector label (e.g., "plate_AB1234")
     plate_number = models.CharField(max_length=20, null=True, blank=True)

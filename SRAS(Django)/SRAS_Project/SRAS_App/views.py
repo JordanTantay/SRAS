@@ -87,14 +87,15 @@ def dashboard(request):
     today_violations = OriginalViolation.objects.filter(verified_at__gte=start_today_utc, verified_at__lte=end_today_utc).count()
     logger.warning(f"[DASHBOARD] Today violations: {today_violations}")
 
-    # This week (Sunday to Saturday)
+    # This week (Sunday to Saturday, using verified_at)
     week_start = today_date - timedelta(days=today_date.weekday() + 1 if today_date.weekday() != 6 else 0)
     week_end = week_start + timedelta(days=6)
     start_week = local_tz.localize(datetime.combine(week_start, datetime.min.time()))
     end_week = local_tz.localize(datetime.combine(week_end, datetime.max.time()))
     start_week_utc = start_week.astimezone(pytz.UTC)
     end_week_utc = end_week.astimezone(pytz.UTC)
-    this_week_violations = OriginalViolation.objects.filter(timestamp__gte=start_week_utc, timestamp__lte=end_week_utc).count()
+    this_week_violations = OriginalViolation.objects.filter(verified_at__gte=start_week_utc, verified_at__lte=end_week_utc).count()
+    logger.warning(f"[DASHBOARD] This week violations ({week_start} to {week_end}): {this_week_violations}")
 
     # This month
     month_start = today_date.replace(day=1)

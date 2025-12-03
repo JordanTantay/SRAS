@@ -3,7 +3,7 @@ from ultralytics import YOLO
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import time
 import threading
-from collections import deque
+from collections import deque, OrderedDict
 import queue
 import numpy as np
 import os
@@ -12,6 +12,9 @@ import django
 import hashlib
 from PIL import Image
 from datetime import timedelta
+import math
+import json
+
 
 # Add the project directory to Python path
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
@@ -20,7 +23,6 @@ sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'SRAS_Project.settings')
 django.setup()
 
-# Import Django models after setup
 from SRAS_App.models import Violation, Camera
 from django.utils import timezone
 
@@ -33,14 +35,15 @@ cap = cv2.VideoCapture("rtsp://SRAS_Admin:Admin123@192.168.1.6:554/stream1")  # 
 TARGET_FPS = 30
 FRAME_INTERVAL = 1.0 / TARGET_FPS
 SKIP_INFERENCE = 1  # Run YOLO every N frames
-BUFFER_SIZE = 5     # Number of frames to buffer
-JPEG_QUALITY = 85   # JPEG encode quality
+BUFFER_SIZE = 10     # Number of frames to buffer
+JPEG_QUALITY = 80   # JPEG encode quality
 DETECTION_RESIZE = (640, 360)  # Resize for detection (w, h)
 
 # Duplicate detection settings
 NO_HELMET_IOU_THRESH = 0.7
 TIME_WINDOW = 300   # seconds (5 minutes)
 SPATIAL_WINDOW = 60 # frames
+
 
 # Camera check
 if not cap.isOpened():
@@ -64,7 +67,7 @@ def get_default_camera():
     try:
         camera, _ = Camera.objects.get_or_create(
             name="Default Camera",
-            defaults={'stream_url': "rtsp://SRAS_Admin:admin123@192.168.1.6:554/stream1"}
+            defaults={'stream_url': "rtsp://SRAS_Admin:Admin123@192.168.1.6:554/stream1"}
         )
         return camera
     except Exception as e:

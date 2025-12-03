@@ -1,0 +1,462 @@
+
+<!DOCTYPE html>
+<html lang="en">
+{% load tz %}
+<head>
+    <meta charset="UTF-8">
+    <title>Pending Violations</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+        }
+        /* Sidebar active link background highlight */
+        .sidebar .nav-link.active {
+            background: #428aba !important;
+            color: #fff !important;
+            border-radius: 8px;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #456882;
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+        }
+        .header{
+            background: #1B3C53;
+            color:#fff;
+            padding:20px 0 20px 0;
+            text-align:center;
+            position: fixed;
+            top: 0;
+            left: 240px;
+            right: 0;
+            z-index: 1001;
+            width: calc(100% - 240px);
+        }
+        .header h1{font-size:2.5em;margin-bottom:10px;font-weight:300}
+        .header p{opacity:.9;font-size:1.1em}
+        .violation-img-thumb {
+            max-width: 120px;
+            max-height: 80px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            object-fit: cover;
+            cursor: pointer;
+            transition: box-shadow 0.2s;
+        }
+        .violation-img-thumb:hover {
+            box-shadow: 0 0 8px #764ba2;
+        }
+        .modal-img {
+            width: 100%;
+            max-width: 700px;
+            max-height: 80vh;
+            object-fit: contain;
+            margin: 0 auto;
+            display: block;
+            border-radius: 8px;
+        }
+        .card-flat {
+            border-radius: 0 !important;
+            box-shadow: none !important;
+            border: none !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            width: 100%;
+        }
+        .table-flat {
+            border-radius: 0 !important;
+            margin: 0 !important;
+            width: 100%;
+        }
+        .container-fluid-flat {
+            padding: 0 !important;
+            margin: 0 !important;
+            width: 100vw;
+            max-width: 100vw;
+        }
+        .main-container {
+            padding: 0 !important;
+            overflow-x: hidden;
+            /* Remove margin-left and width here, let JS handle it */
+        }
+        .btn-outline-view {
+            background: #fff;
+            color: #007bff !important;
+            border: 1px solid #007bff;
+            border-radius: 999px;
+            font-weight: 600;
+            font-size: 0.88em;
+            padding: 3px 10px;
+            box-shadow: none;
+            transition: background 0.18s, color 0.18s, border-color 0.18s;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            text-decoration: none !important;
+        }
+        .btn-outline-view:hover, .btn-outline-view:focus {
+            background: #007bff;
+            color: #fff !important;
+            border-color: #007bff;
+            text-decoration: none !important;
+        }
+        .btn-outline-delete {
+            background: #fff;
+            color: #e74c3c !important;
+            border: 1px solid #e74c3c;
+            border-radius: 999px;
+            font-weight: 600;
+            font-size: 0.88em;
+            padding: 3px 10px;
+            box-shadow: none;
+            transition: background 0.18s, color 0.18s, border-color 0.18s;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            text-decoration: none !important;
+        }
+        .btn-outline-delete:hover, .btn-outline-delete:focus {
+            background: #e74c3c;
+            color: #fff !important;
+            border-color: #e74c3c;
+            text-decoration: none !important;
+        }
+        @media (max-width: 768px) {
+            .main-container {
+                margin-top: 10px;
+                /* margin-left and width handled by JS */
+            }
+            .header {
+                width: calc(100% - 60px);
+                left: 60px;
+            }
+        }
+        .modal-content {
+            border-radius: 0 !important;
+        }
+        /* Keep icon and span default radius */
+    </style>
+</head>
+<body>
+    <div style="display: flex; min-height: 100vh;">
+        <nav id="sidebar" class="sidebar" style="width: 240px; background: #234C6A; color: #fff; position: fixed; top: 0; left: 0; height: 100vh; z-index: 1100; display: flex; flex-direction: column; box-shadow: 2px 0 10px rgba(0,0,0,0.08); transition: width 0.2s;">
+            <div style="padding:10px 16px 10px; border-bottom: 1px solid rgba(255,255,255,0.08);">
+                <a class="navbar-brand" href="{% url 'dashboard' %}" style="color: #fff; font-size: 1.7rem; font-weight: 700; text-decoration: none;">
+                    <i class="fas fa-shield-alt"></i> SRAS
+                </a>
+            </div>
+            <ul class="nav flex-column mt-4" style="flex: 1;">
+                <li class="nav-item mb-2">
+                    <a class="nav-link" href="{% url 'dashboard' %}" style="color: #fff; font-weight: 500;">
+                        <i class="fas fa-tachometer-alt me-2"></i> Dashboard
+                    </a>
+                </li>
+                <li class="nav-item mb-2">
+                    <a class="nav-link" href="{% url 'monitor' %}" style="color: #fff;">
+                        <i class="fas fa-video me-2"></i> Live Monitor
+                    </a>
+                </li>
+                <li class="nav-item mb-2">
+                    <a class="nav-link" href="{% url 'violation_list' %}" style="color: #fff;">
+                        <i class="fas fa-list me-2"></i> Violations
+                    </a>
+                </li>
+                <li class="nav-item mb-2">
+                    <a class="nav-link" href="{% url 'enforcer_list' %}" style="color: #fff;">
+                        <i class="fas fa-users me-2"></i> Enforcers
+                    </a>
+                </li>
+                <li class="nav-item mb-2">
+                    <a class="nav-link active" href="{% url 'pending_violation' %}" style="color: #fff;">
+                        <i class="fas fa-exclamation-circle me-2"></i> Pending Violations
+                    </a>
+                </li>
+            </ul>
+            <div style="padding: 16px 24px; border-top: 1px solid rgba(255,255,255,0.08);">
+                <div class="dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="sidebarDropdown" role="button" data-bs-toggle="dropdown" style="color: #fff;">
+                        <i class="fas fa-user"></i> <span class="d-none d-md-inline">{{ user.username }}</span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="{% url 'logout' %}">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </a></li>
+                    </ul>
+                </div>
+            </div>
+            <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const sidebar = document.getElementById('sidebar');
+                const mainContainer = document.getElementById('mainContainer');
+                const header = document.querySelector('.header');
+                let collapsed = false;
+
+                [mainContainer, header].forEach(el => {
+                    if (el) el.style.transition = 'margin-left 0.2s, width 0.2s, left 0.2s';
+                });
+
+                function setSidebarTextVisibility(hide) {
+                    sidebar.querySelectorAll('.nav-link, .navbar-brand, .dropdown-toggle').forEach(el => {
+                        el.childNodes.forEach(node => {
+                            if (node.nodeType === Node.TEXT_NODE) {
+                                if (hide) {
+                                    if (!node._originalText) node._originalText = node.textContent;
+                                    node.textContent = '';
+                                } else {
+                                    node.textContent = node._originalText || node.textContent;
+                                }
+                            } else if (node.nodeType === Node.ELEMENT_NODE && node.tagName !== 'I') {
+                                if (hide) {
+                                    if (!node.dataset.originalDisplay) node.dataset.originalDisplay = node.style.display;
+                                    node.style.display = 'none';
+                                } else {
+                                    node.style.display = node.dataset.originalDisplay || '';
+                                }
+                            }
+                        });
+                    });
+                    sidebar.querySelectorAll('.dropdown, .sidebar-admin').forEach(adminSection => {
+                        adminSection.querySelectorAll('*').forEach(child => {
+                            if (child.tagName !== 'I') {
+                                if (hide) {
+                                    if (!child.dataset.originalDisplay) child.dataset.originalDisplay = child.style.display;
+                                    child.style.display = 'none';
+                                } else {
+                                    child.style.display = child.dataset.originalDisplay || '';
+                                }
+                            }
+                        });
+                        adminSection.childNodes.forEach(node => {
+                            if (node.nodeType === Node.TEXT_NODE) {
+                                if (hide) {
+                                    if (!node._originalText) node._originalText = node.textContent;
+                                    node.textContent = '';
+                                } else {
+                                    node.textContent = node._originalText || node.textContent;
+                                }
+                            }
+                        });
+                    });
+                }
+
+                function setHeaderWidthAndLeft(width, left) {
+                    if (header) {
+                        header.style.width = width;
+                        header.style.left = left;
+                    }
+                }
+                function collapseSidebar() {
+                    collapsed = true;
+                    sidebar.style.width = '60px';
+                    mainContainer.style.marginLeft = '60px';
+                    mainContainer.style.width = 'calc(100vw - 60px)';
+                    setHeaderWidthAndLeft('calc(100vw - 60px)', '60px');
+                    setSidebarTextVisibility(true);
+                }
+                function expandSidebar() {
+                    collapsed = false;
+                    sidebar.style.width = '240px';
+                    mainContainer.style.marginLeft = '240px';
+                    mainContainer.style.width = 'calc(100vw - 240px)';
+                    setHeaderWidthAndLeft('calc(100vw - 240px)', '240px');
+                    setSidebarTextVisibility(false);
+                }
+
+                setHeaderWidthAndLeft('calc(100vw - 240px)', '240px');
+                mainContainer.style.marginLeft = '240px';
+                mainContainer.style.width = 'calc(100vw - 240px)';
+
+                sidebar.addEventListener('mouseenter', function() {
+                    if (collapsed) {
+                        expandSidebar();
+                        mainContainer.style.transition = 'margin-left 0.2s, width 0.2s';
+                        mainContainer.style.marginLeft = '240px';
+                        mainContainer.style.width = 'calc(100vw - 240px)';
+                        setHeaderWidthAndLeft('calc(100vw - 240px)', '240px');
+                    }
+                });
+                sidebar.addEventListener('mouseleave', function() {
+                    if (!collapsed) {
+                        collapseSidebar();
+                        mainContainer.style.transition = 'margin-left 0.2s, width 0.2s';
+                        mainContainer.style.marginLeft = '60px';
+                        mainContainer.style.width = 'calc(100vw - 60px)';
+                        setHeaderWidthAndLeft('calc(100vw - 60px)', '60px');
+                    }
+                });
+            });
+            </script>
+        </nav>
+        <div class="main-container" id="mainContainer" style="position:relative; min-height:100vh; margin-left:240px; width:calc(100vw - 240px); transition:margin-left 0.2s, width 0.2s;">
+            <div style="height: 110px;"></div>
+            <div class="header">
+                <div style="display: flex; flex-direction: row; align-items: center; justify-content: center; gap: 18px;">
+                    <span style="display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; border-radius: 50%; background: linear-gradient(135deg, #f093fb 0%, #764ba2 100%); box-shadow: 0 2px 8px rgba(52,152,219,0.10);">
+                        <i class="fas fa-exclamation-circle" style="font-size: 1.7rem; color: #fff;"></i>
+                    </span>
+                    <span style="font-size: 1.7rem; font-weight: 800; letter-spacing: 1px; color: #fff; text-shadow: 0 2px 8px rgba(52,152,219,0.10);">
+                        Pending Violations
+                    </span>
+                </div>
+                <div style="text-align: center; margin-top: 2px;">
+                    <span style="font-size: 1rem; color: #e0e6ed; font-weight: 500;">Review and approve or cancel pending detections</span>
+                </div>
+            </div>
+            
+            <!-- Flash Message Display -->
+            {% if flash_message %}
+            <div class="container-fluid" style="padding: 20px 40px 0 40px;">
+                <div class="alert alert-{{ flash_message.type }} alert-dismissible fade show" role="alert" style="border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                    <i class="fas fa-check-circle me-2"></i>
+                    <strong>{{ flash_message.text }}</strong>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            </div>
+            {% endif %}
+            
+            <div class="container-fluid container-fluid-flat" id="mainCardContainer" style="width:100%; transition:width 0.2s;">
+                <div class="card card-flat" style="width:100%; transition:width 0.2s;">
+                    <div class="card-body p-0">
+                        <table class="table table-bordered table-hover table-flat mb-0 text-center align-middle">
+                            <thead class="table-light">
+                                <tr>
+                                    <th style="padding: 16px 18px; position: sticky; top: 0; background: #f8f9fa; z-index: 3;">Image</th>
+                                    <th style="padding: 16px 18px; font-size:1.08em; color:#764ba2; font-weight:700; border: none;">
+                                        <i class="fas fa-id-card"></i> Plate
+                                    </th>
+                                    <th style="padding: 16px 18px; font-size:1.08em; color:#3498db; font-weight:700; border: none;">
+                                        <i class="fas fa-video"></i> Camera
+                                    </th>
+                                    <th style="padding: 16px 18px; font-size:1.08em; color:#11998e; font-weight:700; border: none;">
+                                        <i class="fas fa-clock"></i> Time
+                                    </th>
+                                    <th style="padding: 16px 18px; text-align: center; font-size:1.08em; color:#f093fb; font-weight:700; border: none;">
+                                        <i class="fas fa-cogs"></i> Action
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for violation in pending_violations %}
+                                <tr>
+                                    <td class="text-center">
+                                        {% if violation.image %}
+                                            <img src="{% url 'pending_violation_image' violation.id %}" alt="Violation Image" class="violation-img-thumb" data-bs-toggle="modal" data-bs-target="#imageModal" data-img-url="{% url 'pending_violation_image' violation.id %}" />
+                                        {% else %}
+                                            <span class="text-muted">No image</span>
+                                        {% endif %}
+                                    </td>
+                                    <td class="text-center">{{ violation.plate_number|default:"Unknown" }}</td>
+                                    <td style="padding: 12px 16px;">
+                                        <span style="font-weight: 600; color: #3498db;">
+                                            <i class></i> {{ violation.camera.name }}
+                                        </span>
+                                    </td>
+                                    <td style="padding: 12px 16px;">
+                                        <span style="font-weight: 500; color: #11998e;">
+                                            <i class></i> {% timezone "Asia/Manila" %}{{ violation.timestamp|date:"M d, Y h:i A" }}{% endtimezone %}
+                                        </span>
+                                    </td>
+                                    <td class="text-center">
+                                        <form method="post" action="{% url 'approve_violation' violation.id %}" style="display:inline;">
+                                            {% csrf_token %}
+                                            <button type="submit" class="btn-outline-view" style="margin-right: 8px;">
+                                                <i class="fas fa-check"></i> <span class="d-none d-sm-inline">Approve</span>
+                                            </button>
+                                        </form>
+                                        <form method="post" action="{% url 'cancel_violation' violation.id %}" style="display:inline;">
+                                            {% csrf_token %}
+                                            <button type="submit" class="btn-outline-delete" style="margin-left: 8px;">
+                                                <i class="fas fa-times"></i> <span class="d-none d-sm-inline">Cancel</span>
+                                            </button>
+                                        </form>
+                                    </td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="5" class="text-center">No pending violations found.</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Modal for image preview -->
+    <div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="imageModalLabel">Violation Image</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body text-center">
+            <img id="modalImage" src="" alt="Full Violation Image" class="modal-img" />
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var imageModal = document.getElementById('imageModal');
+        var modalImage = document.getElementById('modalImage');
+        document.querySelectorAll('.violation-img-thumb').forEach(function(img) {
+            img.addEventListener('click', function() {
+                var url = img.getAttribute('data-img-url');
+                modalImage.src = url;
+            });
+        });
+        imageModal.addEventListener('hidden.bs.modal', function () {
+            modalImage.src = '';
+        });
+
+        // Fix card/container width on sidebar collapse/expand
+        const sidebar = document.getElementById('sidebar');
+        const mainContainer = document.getElementById('mainContainer');
+        const mainCardContainer = document.getElementById('mainCardContainer');
+        const cardFlat = document.querySelector('.card.card-flat');
+        let collapsed = false;
+
+        function updateCardWidth() {
+            if (collapsed) {
+                mainContainer.style.marginLeft = '60px';
+                mainContainer.style.width = 'calc(100vw - 60px)';
+                mainCardContainer.style.width = '100%';
+                cardFlat.style.width = '100%';
+            } else {
+                mainContainer.style.marginLeft = '240px';
+                mainContainer.style.width = 'calc(100vw - 240px)';
+                mainCardContainer.style.width = '100%';
+                cardFlat.style.width = '100%';
+            }
+        }
+
+        sidebar.addEventListener('mouseenter', function() {
+            if (collapsed) {
+                collapsed = false;
+                updateCardWidth();
+            }
+        });
+        sidebar.addEventListener('mouseleave', function() {
+            if (!collapsed) {
+                collapsed = true;
+                updateCardWidth();
+            }
+        });
+
+        // Initial state
+        updateCardWidth();
+    });
+    </script>
+</body>
+</html>

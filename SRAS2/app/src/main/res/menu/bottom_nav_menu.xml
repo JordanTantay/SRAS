@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/cameraFragment"
+        android:icon="@drawable/ic_camera"
+        android:title="Camera" />
+
+    <item
+        android:id="@+id/violatorRecordsFragment"
+        android:icon="@drawable/ic_list"
+        android:title="Violators" />
+
+
+</menu>

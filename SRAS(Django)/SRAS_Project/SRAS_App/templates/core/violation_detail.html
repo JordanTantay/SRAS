@@ -1,6 +1,6 @@
-
 <!DOCTYPE html>
 <html lang="en">
+{% load tz %}
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,6 +12,12 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+        }
+        /* Sidebar active link background highlight */
+        .sidebar .nav-link.active {
+            background: #428aba !important;
+            color: #fff !important;
+            border-radius: 8px;
         }
 
         body {
@@ -281,7 +287,7 @@
     <!-- Sidebar Navigation -->
     <div style="display: flex; min-height: 100vh;">
         <nav id="sidebar" class="sidebar" style="width: 240px; background: #234C6A; color: #fff; position: fixed; top: 0; left: 0; height: 100vh; z-index: 1100; display: flex; flex-direction: column; box-shadow: 2px 0 10px rgba(0,0,0,0.08); transition: width 0.2s;">
-            <div style="padding: 32px 24px 16px 24px; border-bottom: 1px solid rgba(255,255,255,0.08);">
+            <div style="padding:10px 16px 10px; border-bottom: 1px solid rgba(255,255,255,0.08);">
                 <a class="navbar-brand" href="{% url 'dashboard' %}" style="color: #fff; font-size: 1.7rem; font-weight: 700; text-decoration: none;">
                     <i class="fas fa-shield-alt"></i> SRAS
                 </a>
@@ -305,6 +311,11 @@
                 <li class="nav-item mb-2">
                     <a class="nav-link" href="{% url 'enforcer_list' %}" style="color: #fff;">
                         <i class="fas fa-users me-2"></i> Enforcers
+                    </a>
+                </li>
+                <li class="nav-item mb-2">
+                    <a class="nav-link" href="{% url 'pending_violation' %}" style="color: #fff;">
+                        <i class="fas fa-exclamation-circle me-2"></i> Pending Violations
                     </a>
                 </li>
             </ul>
@@ -453,7 +464,7 @@
                         <div class="info-grid">
                             <div class="info-item">
                                 <span class="info-label"><i class="fas fa-calendar-alt"></i> Date & Time:</span>
-                                <span class="info-value">{{ violation.timestamp|date:"F d, Y" }} at {{ violation.timestamp|time:"H:i:s" }}</span>
+                                <span class="info-value">{% timezone "Asia/Manila" %}{{ violation.timestamp|date:"F d, Y" }} at {{ violation.timestamp|time:"h:i:s A" }}{% endtimezone %}</span>
                             </div>
                             <div class="info-item">
                                 <span class="info-label"><i class="fas fa-car"></i> Plate Number:</span>
@@ -492,7 +503,7 @@
         <div class="delete-modal-content">
             <h3>🗑️ Confirm Deletion</h3>
             <p>Are you sure you want to delete violation #{{ violation.id }}?</p>
-            <p><strong>Time:</strong> {{ violation.timestamp|date:"M d, Y H:i" }}</p>
+            <p><strong>Time:</strong> {% timezone "Asia/Manila" %}{{ violation.timestamp|date:"M d, Y h:i A" }}{% endtimezone %}</p>
             <p><strong>Plate:</strong> {{ violation.plate_number|default:"UNKNOWN" }}</p>
             <p>This action cannot be undone.</p>
             <div class="delete-modal-buttons">
