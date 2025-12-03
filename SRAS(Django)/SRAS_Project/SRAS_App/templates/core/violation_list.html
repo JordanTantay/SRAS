@@ -602,12 +602,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             </span>
                             <span id="detailTimestamp" style="color: #234C6A; font-size: 1.08em; font-weight: 500;"></span>
                         </div>
-                        <div style="display: flex; justify-content: flex-start; align-items: center; gap: 18px; padding: 12px 0; border-bottom: 1px solid #e3e8ee;">
-                            <span style="font-weight: 600; color: #2980b9; font-size: 1.08em; min-width: 160px;">
-                                <i class="fas fa-check-circle"></i> Verified:
-                            </span>
-                            <span id="detailVerifiedAt" style="color: #234C6A; font-size: 1.08em; font-weight: 500;"></span>
-                        </div>
+                        
                         <div style="display: flex; justify-content: flex-start; align-items: center; gap: 18px; padding: 12px 0; border-bottom: 1px solid #e3e8ee;">
                             <span style="font-weight: 600; color: #2980b9; font-size: 1.08em; min-width: 160px;">
                                 <i class="fas fa-car"></i> Plate Number:
@@ -661,14 +656,13 @@ document.addEventListener('DOMContentLoaded', function() {
     let currentDeleteId=null,currentZoom=1,isPanning=false,panStartX=0,panStartY=0,panOffsetX=0,panOffsetY=0;
     let currentDetailViolationId=null;
     
-    function showViolationDetail(id, plateNumber, cameraName, cameraUrl, timestamp, verifiedBy, riderHash, verifiedAt) {
+    function showViolationDetail(id, plateNumber, cameraName, cameraUrl, timestamp, verifiedBy, riderHash) {
         currentDetailViolationId = id;
         document.getElementById('detailViolationImage').src = `/violations/${id}/image/`;
         document.getElementById('detailPlateNumber').textContent = plateNumber;
         document.getElementById('detailCamera').textContent = cameraName;
         document.getElementById('detailCameraUrl').textContent = cameraUrl;
         document.getElementById('detailTimestamp').textContent = timestamp;
-        document.getElementById('detailVerifiedAt').textContent = verifiedAt;
         document.getElementById('detailVerifiedBy').textContent = verifiedBy;
         document.getElementById('detailRiderHash').textContent = riderHash;
         document.getElementById('violationDetailModal').style.display = 'block';

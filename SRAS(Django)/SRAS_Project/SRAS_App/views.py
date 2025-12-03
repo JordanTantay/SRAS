@@ -76,7 +76,7 @@ def dashboard(request):
     now = timezone.now().astimezone(local_tz)
     today_date = now.date()
 
-    # Today (using verified_at)
+    # Today
     start_today = local_tz.localize(datetime.combine(today_date, datetime.min.time()))
     end_today = local_tz.localize(datetime.combine(today_date, datetime.max.time()))
     start_today_utc = start_today.astimezone(pytz.UTC)
@@ -84,18 +84,16 @@ def dashboard(request):
     logger.warning(f"[DEBUG] Dashboard Manila now: {now}, Today date: {today_date}")
     logger.warning(f"[DEBUG] Dashboard Start of today Manila: {start_today}, End of today Manila: {end_today}")
     logger.warning(f"[DEBUG] Dashboard Start of today UTC: {start_today_utc}, End of today UTC: {end_today_utc}")
-    today_violations = OriginalViolation.objects.filter(verified_at__gte=start_today_utc, verified_at__lte=end_today_utc).count()
-    logger.warning(f"[DASHBOARD] Today violations: {today_violations}")
+    today_violations = OriginalViolation.objects.filter(timestamp__gte=start_today_utc, timestamp__lte=end_today_utc).count()
 
-    # This week (Sunday to Saturday, using verified_at)
+    # This week (Sunday to Saturday)
     week_start = today_date - timedelta(days=today_date.weekday() + 1 if today_date.weekday() != 6 else 0)
     week_end = week_start + timedelta(days=6)
     start_week = local_tz.localize(datetime.combine(week_start, datetime.min.time()))
     end_week = local_tz.localize(datetime.combine(week_end, datetime.max.time()))
     start_week_utc = start_week.astimezone(pytz.UTC)
     end_week_utc = end_week.astimezone(pytz.UTC)
-    this_week_violations = OriginalViolation.objects.filter(verified_at__gte=start_week_utc, verified_at__lte=end_week_utc).count()
-    logger.warning(f"[DASHBOARD] This week violations ({week_start} to {week_end}): {this_week_violations}")
+    this_week_violations = OriginalViolation.objects.filter(timestamp__gte=start_week_utc, timestamp__lte=end_week_utc).count()
 
     # This month
     month_start = today_date.replace(day=1)
@@ -104,8 +102,7 @@ def dashboard(request):
     end_month = local_tz.localize(datetime.combine(last_day, datetime.max.time()))
     start_month_utc = start_month.astimezone(pytz.UTC)
     end_month_utc = end_month.astimezone(pytz.UTC)
-    this_month_violations = OriginalViolation.objects.filter(verified_at__gte=start_month_utc, verified_at__lte=end_month_utc).count()
-    logger.warning(f"[DASHBOARD] This month violations ({month_start} to {last_day}): {this_month_violations}")
+    this_month_violations = OriginalViolation.objects.filter(timestamp__gte=start_month_utc, timestamp__lte=end_month_utc).count()
 
     total_violations = OriginalViolation.objects.count()
 
@@ -285,7 +282,7 @@ def violation_statistics(request):
         date = end_date - timedelta(days=4-i)
         dates.append(date)
 
-    # Get approved violation counts for each date (using verified_at)
+    # Get approved violation counts for each date
     local_tz = pytz.timezone('Asia/Manila')
     statistics = []
     for date in dates:
@@ -293,7 +290,7 @@ def violation_statistics(request):
         end_dt = local_tz.localize(datetime.combine(date, datetime.max.time()))
         start_utc = start_dt.astimezone(pytz.UTC)
         end_utc = end_dt.astimezone(pytz.UTC)
-        qs = OriginalViolation.objects.filter(verified_at__gte=start_utc, verified_at__lte=end_utc)
+        qs = OriginalViolation.objects.filter(timestamp__gte=start_utc, timestamp__lte=end_utc)
         count = qs.count()
         logger.warning(f"[STATISTICS] Date: {date}, Range: {start_utc} to {end_utc}, Count: {count}, IDs: {[v.id for v in qs]}")
         statistics.append({
@@ -314,7 +311,7 @@ def violation_statistics(request):
         end_dt = local_tz.localize(datetime.combine(date, datetime.max.time()))
         start_utc = start_dt.astimezone(pytz.UTC)
         end_utc = end_dt.astimezone(pytz.UTC)
-        qs = OriginalViolation.objects.filter(verified_at__gte=start_utc, verified_at__lte=end_utc)
+        qs = OriginalViolation.objects.filter(timestamp__gte=start_utc, timestamp__lte=end_utc)
         count = qs.count()
         logger.warning(f"[WEEK_STATS] {week_labels[i]} {date}: {count}")
         week_statistics.append({
@@ -326,8 +323,7 @@ def violation_statistics(request):
     # Calculate statistics for each week of the current month (real calendar weeks, Sun-Sat)
     import calendar
     month_statistics = []
-    manila_today = manila_now.date()
-    first_day = manila_today.replace(day=1)
+    first_day = today.replace(day=1)
     last_day = (first_day.replace(month=first_day.month % 12 + 1, day=1) - timedelta(days=1))
     # Use the real first day of the month, not the first Sunday
     week_ranges = []
@@ -344,7 +340,7 @@ def violation_statistics(request):
         end_dt = local_tz.localize(datetime.combine(day, datetime.max.time()))
         start_utc = start_dt.astimezone(pytz.UTC)
         end_utc = end_dt.astimezone(pytz.UTC)
-        qs = OriginalViolation.objects.filter(verified_at__gte=start_utc, verified_at__lte=end_utc)
+        qs = OriginalViolation.objects.filter(timestamp__gte=start_utc, timestamp__lte=end_utc)
         count = qs.count()
         month_days.append({
             'label': day.strftime('%a'),
@@ -400,7 +396,7 @@ def violation_statistics(request):
             end_dt = local_tz.localize(datetime.combine(day, datetime.max.time()))
             start_utc = start_dt.astimezone(pytz.UTC)
             end_utc = end_dt.astimezone(pytz.UTC)
-            qs = OriginalViolation.objects.filter(verified_at__gte=start_utc, verified_at__lte=end_utc)
+            qs = OriginalViolation.objects.filter(timestamp__gte=start_utc, timestamp__lte=end_utc)
             count = qs.count()
             extra_days.append({
                 'label': day.strftime('%a'),
@@ -415,15 +411,14 @@ def violation_statistics(request):
             'days': extra_days
         })
 
-    # Calculate statistics for each hour of today (local time, using verified_at)
+    # Calculate statistics for each hour of today (local time)
     today_hourly = []
-    manila_today = manila_now.date()
     for hour in range(24):
-        hour_start = local_tz.localize(datetime.combine(manila_today, datetime.min.time()) + timedelta(hours=hour))
+        hour_start = local_tz.localize(datetime.combine(today, datetime.min.time()) + timedelta(hours=hour))
         hour_end = hour_start + timedelta(minutes=59, seconds=59, microseconds=999999)
         hour_start_utc = hour_start.astimezone(pytz.UTC)
         hour_end_utc = hour_end.astimezone(pytz.UTC)
-        qs = OriginalViolation.objects.filter(verified_at__gte=hour_start_utc, verified_at__lte=hour_end_utc)
+        qs = OriginalViolation.objects.filter(timestamp__gte=hour_start_utc, timestamp__lte=hour_end_utc)
         count = qs.count()
         logger.warning(f"[TODAY_HOURLY] {hour:02d}:00 - {hour:02d}:59: {count}")
         today_hourly.append({
@@ -785,10 +780,10 @@ def approve_violation(request, violation_id):
         violation.verified_by = request.user
         violation.verified_at = timezone.now()
         violation.save()
-        # Create OriginalViolation record if needed
+        # Create OriginalViolation record preserving the original capture timestamp
         OriginalViolation.objects.create(
             camera=violation.camera,
-            timestamp=timezone.now(),
+            timestamp=violation.timestamp,  # Use original capture time, not current time
             plate_number=violation.plate_number,
             image=violation.image,
             plate_image=violation.plate_image,
